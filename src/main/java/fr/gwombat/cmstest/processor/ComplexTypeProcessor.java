@@ -52,7 +52,7 @@ public class ComplexTypeProcessor implements CmsProcessor {
                 logger.debug("Working on field {}", field);
                 String propertyKey = CmsProcessorUtils.detectPropertyName(field);
                 final String setterName = getSetterName(field.getName());
-                logger.debug("Setter name: {}", setterName);
+                logger.trace("Setter name: {}", setterName);
 
                 final Method matchMethod = findMatchingMethod(clazz, setterName);
                 if (matchMethod == null)
@@ -73,9 +73,9 @@ public class ComplexTypeProcessor implements CmsProcessor {
                     propertyKey = rootName + "/" + propertyKey;
                     final Object paramValue = cmsResultProcessingChain.process(parameterType, cmsResults, fieldParameterizedType, propertyKey);
 
-                    logger.debug("Invoking setter...");
+                    logger.debug("Invoking setter {}", matchMethod);
                     matchMethod.invoke(target, paramValue);
-                    logger.debug("Setter invoked successfully!");
+                    logger.debug("Setter {} invoked successfully!", matchMethod);
                 }
             }
             applyPostConverters(target);

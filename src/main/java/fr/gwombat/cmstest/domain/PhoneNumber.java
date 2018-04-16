@@ -9,7 +9,7 @@ import fr.gwombat.cmstest.converters.PhoneNumberConverter;
  * @since 15/04/2018
  */
 @CmsElement(converter = PhoneNumberConverter.class)
-public class PhoneNumber {
+public class PhoneNumber implements Comparable<PhoneNumber> {
 
     private String name;
     private String number;
@@ -28,6 +28,11 @@ public class PhoneNumber {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    @Override
+    public int compareTo(PhoneNumber o) {
+        return this.name.compareTo(o.name);
     }
 
     @Override

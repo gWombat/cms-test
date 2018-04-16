@@ -89,8 +89,10 @@ public class CmsManagerTest {
 
         assertNotNull(personResult.getPhones());
         assertEquals(2, personResult.getPhones().size());
-        assertEquals("Mobile", personResult.getPhones().get(0).getName());
-        assertEquals("06 23 45 67 89", personResult.getPhones().get(0).getNumber());
+        assertEquals("Home", personResult.getPhones().get(0).getName());
+        assertEquals("01 23 45 67 89", personResult.getPhones().get(0).getNumber());
+        assertEquals("Mobile", personResult.getPhones().get(1).getName());
+        assertEquals("06 23 45 67 89", personResult.getPhones().get(1).getNumber());
 
         assertNotNull(personResult.getIntList());
         assertEquals(3, personResult.getIntList().size());

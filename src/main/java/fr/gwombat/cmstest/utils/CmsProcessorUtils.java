@@ -171,7 +171,7 @@ public final class CmsProcessorUtils {
         for (Map.Entry<String, String> entry : results.entrySet()) {
             final String entryKey = extractFromKey(entry.getKey(), prefix);
             final String[] keyParts = splitKey(entryKey);
-            LOGGER.debug("entry: {} --> splitted: {}", entry.getKey(), keyParts);
+            LOGGER.trace("entry: {} --> splitted: {}", entry.getKey(), keyParts);
             if (entry.getKey().startsWith(prefix)) {
                 String key = keyParts[0];
                 String value = null;

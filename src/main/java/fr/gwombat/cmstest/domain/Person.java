@@ -2,6 +2,7 @@ package fr.gwombat.cmstest.domain;
 
 import fr.gwombat.cmstest.annotations.CmsElement;
 import fr.gwombat.cmstest.annotations.CmsProperty;
+import fr.gwombat.cmstest.converters.PersonPostConverter;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @since 14/04/2018
  */
 // 1. with wrapper:
-@CmsElement
+@CmsElement(postConverters = PersonPostConverter.class)
 // 2. without wrapper:
 //@CmsElement(nodeName = "my-page/person")
 public class Person {
