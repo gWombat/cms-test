@@ -11,7 +11,10 @@ import java.util.Map;
  *
  * @since 14/04/2018
  */
+// 1. with wrapper:
 @CmsElement
+// 2. without wrapper:
+//@CmsElement(nodeName = "my-page/person")
 public class Person {
 
     @CmsProperty(name = "nom")
@@ -19,7 +22,9 @@ public class Person {
     private String            firstname;
     private int               age;
     private List<PhoneNumber> phones;
+    private List<Integer>     intList;
     private Map<String, Long> idTests;
+    private Address           address;
 
     public String getName() {
         return name;
@@ -62,6 +67,23 @@ public class Person {
         this.idTests = idTests;
     }
 
+    public List<Integer> getIntList() {
+        return intList;
+    }
+
+    @CmsProperty(name = "list")
+    public void setIntList(List<Integer> intList) {
+        this.intList = intList;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -69,6 +91,9 @@ public class Person {
                 ", firstname='" + firstname + '\'' +
                 ", age=" + age +
                 ", phones=" + phones +
+                ", intList=" + intList +
+                ", idTests=" + idTests +
+                ", address=" + address +
                 '}';
     }
 }

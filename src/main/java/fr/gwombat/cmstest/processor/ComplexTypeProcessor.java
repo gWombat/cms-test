@@ -42,31 +42,19 @@ public class ComplexTypeProcessor implements CmsProcessor {
     @Override
     public Object process(final Map<String, String> cmsResults, final Class<?> clazz, ParameterizedType parameterizedType, final String rootName) {
         Object target = null;
-        try {
-            final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
-            if (cmsElementAnnotation.converter() != DefaultConverter.class) {
-                final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
-                final Converter converter = converterClass.newInstance();
-                target = converter.convert(cmsResults);
-                applyPostConverters(target);
-                return target;
-            }
 
+        if (isCustomConverterAvailable(clazz))
+            return applyCustomConverter(clazz, cmsResults, rootName);
+
+        try {
             target = clazz.newInstance();
             for (Field field : clazz.getDeclaredFields()) {
                 logger.debug("Working on field {}", field);
                 String propertyKey = CmsProcessorUtils.detectPropertyName(field);
-                Method matchMethod = null;
                 final String setterName = getSetterName(field.getName());
                 logger.debug("Setter name: {}", setterName);
 
-                for (Method method : clazz.getMethods()) {
-                    if (method.getName().equals(setterName)) {
-                        matchMethod = method;
-                        break;
-                    }
-                }
-
+                final Method matchMethod = findMatchingMethod(clazz, setterName);
                 if (matchMethod == null)
                     continue;
 
@@ -78,19 +66,49 @@ public class ComplexTypeProcessor implements CmsProcessor {
 
                     final Class<?> parameterType = matchMethod.getParameterTypes()[0];
 
-                    ParameterizedType parameterizedType1 = null;
+                    ParameterizedType fieldParameterizedType = null;
                     if (field.getGenericType() instanceof ParameterizedType)
-                        parameterizedType1 = (ParameterizedType) field.getGenericType();
+                        fieldParameterizedType = (ParameterizedType) field.getGenericType();
 
-                    final Object paramValue = cmsResultProcessingChain.process(parameterType, cmsResults, parameterizedType1, propertyKey);
+                    propertyKey = rootName + "/" + propertyKey;
+                    final Object paramValue = cmsResultProcessingChain.process(parameterType, cmsResults, fieldParameterizedType, propertyKey);
 
                     logger.debug("Invoking setter...");
                     matchMethod.invoke(target, paramValue);
                     logger.debug("Setter invoked successfully!");
-
                 }
             }
+            applyPostConverters(target);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
+        }
+        return target;
+    }
+
+    private static Method findMatchingMethod(Class<?> clazz, String setterName) {
+        for (Method method : clazz.getMethods()) {
+            if (method.getName().equals(setterName))
+                return method;
+        }
+        return null;
+    }
+
+    private static boolean isCustomConverterAvailable(final Class<?> clazz) {
+        final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
+        return cmsElementAnnotation != null && cmsElementAnnotation.converter() != DefaultConverter.class;
+    }
+
+    private static Object applyCustomConverter(final Class<?> clazz, final Map<String, String> cmsResults, final String rootName) {
+        Object target = null;
+        final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
+        try {
+            final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
+            final Converter converter = converterClass.newInstance();
+            final Map<String, String> test = CmsProcessorUtils.getCmsResultsSubMap(cmsResults, rootName);
+            logger.debug("Invoking Converter {}...", converter);
+            target = converter.convert(test);
+            applyPostConverters(target);
+        } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
         return target;
@@ -101,6 +119,7 @@ public class ComplexTypeProcessor implements CmsProcessor {
         if (annotation != null) {
             for (Class<? extends PostConverter> postConverterClass : annotation.postConverters()) {
                 final PostConverter postConverter = postConverterClass.newInstance();
+                logger.debug("Invoking post-converter {}...", postConverter);
                 postConverter.postConvert(target);
             }
         }

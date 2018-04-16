@@ -2,8 +2,6 @@ package fr.gwombat.cmstest.manager;
 
 import fr.gwombat.cmstest.annotations.CmsElement;
 import fr.gwombat.cmstest.annotations.CmsPageResult;
-import fr.gwombat.cmstest.converters.Converter;
-import fr.gwombat.cmstest.converters.DefaultConverter;
 import fr.gwombat.cmstest.processor.CmsResultProcessingChain;
 import fr.gwombat.cmstest.service.CmsService;
 import fr.gwombat.cmstest.utils.CmsProcessorUtils;
@@ -34,32 +32,18 @@ public class CmsManagerImpl implements CmsManager {
     @Override
     public <T> T produceCmsPageResult(final Class<T> resultType) {
 
-        T target = null;
-        try {
-            final Map<String, String> cmsResults = cmsService.getCmsResults();
-            final Map<String, String> subListResult = CmsProcessorUtils.getCmsResultsSubMap(cmsResults, CmsProcessorUtils.detectRootNodeName(resultType));
+        if (CmsProcessorUtils.isMap(resultType)
+                || CmsProcessorUtils.isCollection(resultType)
+                || CmsProcessorUtils.isSimpleType(resultType))
+            throw new IllegalArgumentException("Root result object must be a complex object!");
 
-            if (subListResult.isEmpty())
-                return null;
+        final Map<String, String> cmsResults = cmsService.getCmsResults();
+        final Map<String, String> subListResult = CmsProcessorUtils.getCmsResultsSubMap(cmsResults, "");
 
-            if (isTargetCmsPageResult(resultType))
-                logger.debug("target object is marked as a @{}", CmsPageResult.class.getSimpleName());
-            else if (isTargetCmsElement(resultType)) {
-                logger.debug("target object is marked as @{}", CmsElement.class.getSimpleName());
-                final CmsElement cmsElementAnnotation = resultType.getAnnotation(CmsElement.class);
-                if (cmsElementAnnotation.converter() != DefaultConverter.class) {
-                    final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
-                    final Converter converter = converterClass.newInstance();
-                    return (T) converter.convert(subListResult);
-                } else
-                    target = (T) cmsResultProcessingChain.process(resultType, subListResult, null, null);
-            }
+        if (subListResult.isEmpty())
+            return null;
 
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return target;
+        return (T) cmsResultProcessingChain.process(resultType, subListResult, null, CmsProcessorUtils.detectRootNodeName(resultType));
     }
 
 

@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * @since 14/04/2018
  */
 @Documented
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CmsNode {
 
