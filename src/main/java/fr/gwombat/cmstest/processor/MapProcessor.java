@@ -1,22 +1,20 @@
 package fr.gwombat.cmstest.processor;
 
-import fr.gwombat.cmstest.configuration.CmsResultConfiguration;
+import fr.gwombat.cmstest.context.CmsResultContextFacade;
 import fr.gwombat.cmstest.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
 public class MapProcessor extends AbstractCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapProcessor.class);
 
-    public MapProcessor(CmsResultConfiguration cmsResultConfiguration, CmsResultProcessingChain cmsResultProcessingChain) {
-        super(cmsResultConfiguration, cmsResultProcessingChain);
+    public MapProcessor(CmsResultContextFacade cmsResultContextFacade, CmsResultProcessingChain cmsResultProcessingChain) {
+        super(cmsResultContextFacade, cmsResultProcessingChain);
     }
 
     @Override

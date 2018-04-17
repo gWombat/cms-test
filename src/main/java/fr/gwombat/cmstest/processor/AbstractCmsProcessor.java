@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.processor;
 
-import fr.gwombat.cmstest.configuration.CmsResultConfiguration;
+import fr.gwombat.cmstest.context.CmsResultContextFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +17,12 @@ public abstract class AbstractCmsProcessor implements CmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCmsProcessor.class);
 
-    protected final CmsResultConfiguration   cmsResultConfiguration;
+    protected final CmsResultContextFacade   cmsResultContextFacade;
     protected final CmsResultProcessingChain cmsResultProcessingChain;
 
-    public AbstractCmsProcessor(CmsResultConfiguration cmsResultConfiguration, CmsResultProcessingChain cmsResultProcessingChain) {
-        this.cmsResultConfiguration = cmsResultConfiguration;
+    public AbstractCmsProcessor(CmsResultContextFacade cmsResultContextFacade, CmsResultProcessingChain cmsResultProcessingChain) {
         this.cmsResultProcessingChain = cmsResultProcessingChain;
+        this.cmsResultContextFacade = cmsResultContextFacade;
     }
 
     protected Map<String, String> getCmsResultsSubMap(final Map<String, String> globalResults, final String prefix) {
@@ -45,7 +45,7 @@ public abstract class AbstractCmsProcessor implements CmsProcessor {
                 .filter(entry -> entry.getKey().startsWith(prefix))
                 .forEach(entry -> {
                     final String entryKey = removePrefixFromKey(entry.getKey(), prefix);
-                    final String[] keyParts = entryKey.split(String.valueOf(cmsResultConfiguration.getPropertySeparator()), 2);
+                    final String[] keyParts = entryKey.split(String.valueOf(cmsResultContextFacade.getPropertySeparator()), 2);
 
                     final String key = keyParts[0];
                     final String value = keyParts.length > 1 ? keyParts[1] : key;

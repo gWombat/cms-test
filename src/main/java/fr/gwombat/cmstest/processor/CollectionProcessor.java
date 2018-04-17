@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.processor;
 
-import fr.gwombat.cmstest.configuration.CmsResultConfiguration;
+import fr.gwombat.cmstest.context.CmsResultContextFacade;
 import fr.gwombat.cmstest.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +19,8 @@ public class CollectionProcessor extends AbstractCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProcessor.class);
 
-    public CollectionProcessor(final CmsResultProcessingChain cmsResultProcessingChain, final CmsResultConfiguration cmsResultConfiguration) {
-        super(cmsResultConfiguration, cmsResultProcessingChain);
+    public CollectionProcessor(final CmsResultContextFacade cmsResultContextFacade, final CmsResultProcessingChain cmsResultProcessingChain) {
+        super(cmsResultContextFacade, cmsResultProcessingChain);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest.processor;
 
 import fr.gwombat.cmstest.annotations.CmsElement;
-import fr.gwombat.cmstest.configuration.CmsResultConfiguration;
+import fr.gwombat.cmstest.context.CmsResultContextFacade;
 import fr.gwombat.cmstest.converters.Converter;
 import fr.gwombat.cmstest.converters.DefaultConverter;
 import fr.gwombat.cmstest.converters.PostConverter;
@@ -10,7 +10,6 @@ import fr.gwombat.cmstest.utils.TypeUtils;
 import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -24,13 +23,12 @@ import java.util.Map;
  *
  * @since 14/04/2018
  */
-@Service
 public class ComplexTypeProcessor extends AbstractCmsProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(ComplexTypeProcessor.class);
 
-    public ComplexTypeProcessor(CmsResultConfiguration cmsResultConfiguration, CmsResultProcessingChain cmsResultProcessingChain) {
-        super(cmsResultConfiguration, cmsResultProcessingChain);
+    public ComplexTypeProcessor(CmsResultContextFacade cmsResultContextFacade, CmsResultProcessingChain cmsResultProcessingChain) {
+        super(cmsResultContextFacade, cmsResultProcessingChain);
     }
 
     @Override
@@ -111,7 +109,10 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
         final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
         try {
             final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
-            final Converter converter = converterClass.newInstance();
+            final Converter converter = cmsResultContextFacade.getConverter(converterClass);
+            if (converter == null)
+                throw new IllegalArgumentException("Enable to find a converter of class " + converterClass);
+
             final Map<String, String> test = getCmsResultsSubMap(cmsResults, rootName);
             logger.debug("Invoking Converter {}...", converter);
             target = converter.convert(test);
@@ -122,11 +123,11 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
         return target;
     }
 
-    private static void applyPostConverters(Object target) throws IllegalAccessException, InstantiationException {
+    private void applyPostConverters(Object target) throws IllegalAccessException, InstantiationException {
         final CmsElement annotation = target.getClass().getAnnotation(CmsElement.class);
         if (annotation != null) {
             for (Class<? extends PostConverter> postConverterClass : annotation.postConverters()) {
-                final PostConverter postConverter = postConverterClass.newInstance();
+                final PostConverter postConverter = cmsResultContextFacade.getPostConverter(postConverterClass);
                 logger.debug("Invoking post-converter {}...", postConverter);
                 postConverter.postConvert(target);
             }

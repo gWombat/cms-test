@@ -1,11 +1,10 @@
 package fr.gwombat.cmstest.manager;
 
-import fr.gwombat.cmstest.configuration.CmsResultConfiguration;
+import fr.gwombat.cmstest.context.CmsResultContextFacade;
 import fr.gwombat.cmstest.processor.CmsResultProcessingChain;
 import fr.gwombat.cmstest.service.CmsService;
 import fr.gwombat.cmstest.utils.AnnotationDetectorUtils;
 import fr.gwombat.cmstest.utils.TypeUtils;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -14,17 +13,16 @@ import java.util.Map;
  *
  * @since 14/04/2018
  */
-@Service
 public class CmsManagerImpl implements CmsManager {
 
     private final CmsService               cmsService;
     private final CmsResultProcessingChain cmsResultProcessingChain;
-    private final CmsResultConfiguration   cmsResultConfiguration;
+    private final CmsResultContextFacade   cmsResultContextFacade;
 
-    public CmsManagerImpl(CmsService cmsService, CmsResultProcessingChain cmsResultProcessingChain, CmsResultConfiguration cmsResultConfiguration) {
+    public CmsManagerImpl(CmsService cmsService, CmsResultProcessingChain cmsResultProcessingChain, CmsResultContextFacade cmsResultContextFacade) {
         this.cmsService = cmsService;
         this.cmsResultProcessingChain = cmsResultProcessingChain;
-        this.cmsResultConfiguration = cmsResultConfiguration;
+        this.cmsResultContextFacade = cmsResultContextFacade;
     }
 
     @Override
@@ -41,7 +39,7 @@ public class CmsManagerImpl implements CmsManager {
         if (cmsResults.isEmpty())
             return null;
 
-        final String nodeName = cmsResultConfiguration.getRootNodePath(AnnotationDetectorUtils.detectRootNodeName(resultType));
+        final String nodeName = cmsResultContextFacade.getRootNodePath(AnnotationDetectorUtils.detectRootNodeName(resultType));
         return (T) cmsResultProcessingChain.process(resultType, cmsResults, null, nodeName);
     }
 }
