@@ -22,10 +22,6 @@ public final class TypeUtils {
         return Map.class.isAssignableFrom(parameterType);
     }
 
-    public static boolean isEnum(final Class<?> parameterType) {
-        return Enum.class.isAssignableFrom(parameterType);
-    }
-
     public static boolean isSimpleType(final Class<?> parameterType) {
         if (parameterType == Byte.class || parameterType == byte.class)
             return true;
@@ -45,7 +41,7 @@ public final class TypeUtils {
             return true;
         if (parameterType == Character.class || parameterType == char.class)
             return true;
-        return false;
+        return Enum.class.isAssignableFrom(parameterType);
     }
 
     public static Object castValue(final Class<?> parameterType, final String cmsValue) {
@@ -65,6 +61,8 @@ public final class TypeUtils {
             return Boolean.parseBoolean(cmsValue);
         if (parameterType == Short.class || parameterType == short.class)
             return Short.parseShort(cmsValue);
+        if (Enum.class.isAssignableFrom(parameterType))
+            return Enum.valueOf((Class<Enum>) parameterType, cmsValue);
 
         return parameterType.cast(cmsValue);
     }

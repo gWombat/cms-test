@@ -27,16 +27,15 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(ComplexTypeProcessor.class);
 
-    public ComplexTypeProcessor(CmsResultContextFacade cmsResultContextFacade, CmsResultProcessingChain cmsResultProcessingChain) {
-        super(cmsResultContextFacade, cmsResultProcessingChain);
+    public ComplexTypeProcessor(CmsResultContextFacade cmsResultContextFacade) {
+        super(cmsResultContextFacade);
     }
 
     @Override
     public boolean isExecutable(Class<?> clazz) {
         return !TypeUtils.isCollection(clazz)
                 && !TypeUtils.isSimpleType(clazz)
-                && !TypeUtils.isMap(clazz)
-                && !TypeUtils.isEnum(clazz);
+                && !TypeUtils.isMap(clazz);
     }
 
     @Override
@@ -78,7 +77,7 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
                         fieldParameterizedType = (ParameterizedType) field.getGenericType();
 
                     propertyKey = rootName + "/" + propertyKey;
-                    final Object paramValue = cmsResultProcessingChain.process(parameterType, cmsResults, fieldParameterizedType, propertyKey);
+                    final Object paramValue = cmsResultContextFacade.getProcessingChain().process(parameterType, cmsResults, fieldParameterizedType, propertyKey);
 
                     logger.debug("Invoking setter {}", matchMethod);
                     matchMethod.invoke(target, paramValue);

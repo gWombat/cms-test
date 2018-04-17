@@ -19,8 +19,8 @@ public class CollectionProcessor extends AbstractCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProcessor.class);
 
-    public CollectionProcessor(final CmsResultContextFacade cmsResultContextFacade, final CmsResultProcessingChain cmsResultProcessingChain) {
-        super(cmsResultContextFacade, cmsResultProcessingChain);
+    public CollectionProcessor(final CmsResultContextFacade cmsResultContextFacade) {
+        super(cmsResultContextFacade);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CollectionProcessor extends AbstractCmsProcessor {
         LOGGER.debug("Processing collection of type: {}<{}>", clazz, parameterizedTypeClass);
         for (Map.Entry<String, Map<String, String>> entry : collectionItems.entrySet()) {
             final String propertyKey = rootName + "/" + entry.getKey();
-            final Object listItem = cmsResultProcessingChain.process(parameterizedTypeClass, cmsResults, null, propertyKey);
+            final Object listItem = cmsResultContextFacade.getProcessingChain().process(parameterizedTypeClass, cmsResults, null, propertyKey);
             LOGGER.debug("collection item built: {}", listItem);
             collection.add(listItem);
         }

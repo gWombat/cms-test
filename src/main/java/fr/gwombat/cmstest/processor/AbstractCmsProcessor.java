@@ -18,10 +18,8 @@ public abstract class AbstractCmsProcessor implements CmsProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCmsProcessor.class);
 
     protected final CmsResultContextFacade   cmsResultContextFacade;
-    protected final CmsResultProcessingChain cmsResultProcessingChain;
 
-    public AbstractCmsProcessor(CmsResultContextFacade cmsResultContextFacade, CmsResultProcessingChain cmsResultProcessingChain) {
-        this.cmsResultProcessingChain = cmsResultProcessingChain;
+    public AbstractCmsProcessor(CmsResultContextFacade cmsResultContextFacade) {
         this.cmsResultContextFacade = cmsResultContextFacade;
     }
 

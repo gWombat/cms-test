@@ -13,8 +13,8 @@ public class MapProcessor extends AbstractCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapProcessor.class);
 
-    public MapProcessor(CmsResultContextFacade cmsResultContextFacade, CmsResultProcessingChain cmsResultProcessingChain) {
-        super(cmsResultContextFacade, cmsResultProcessingChain);
+    public MapProcessor(CmsResultContextFacade cmsResultContextFacade) {
+        super(cmsResultContextFacade);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class MapProcessor extends AbstractCmsProcessor {
         LOGGER.debug("Processing map of type: {}<{},{}>", clazz, String.class, valueClass);
         for (Map.Entry<String, Map<String, String>> entry : mapItems.entrySet()) {
             final String propertyKey = rootName + "/" + entry.getKey();
-            final Object mapItem = cmsResultProcessingChain.process(valueClass, cmsResults, null, propertyKey);
+            final Object mapItem = cmsResultContextFacade.getProcessingChain().process(valueClass, cmsResults, null, propertyKey);
             LOGGER.debug("map item built: {}", mapItem);
             map.put(entry.getKey(), mapItem);
         }

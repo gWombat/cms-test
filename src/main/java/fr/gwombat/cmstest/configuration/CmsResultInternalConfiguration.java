@@ -14,31 +14,33 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CmsResultInternalConfiguration {
 
-    private CmsResultConfigurer configuration;
+    private CmsResultConfigurer resultConfigurer;
 
-    @Autowired(required = false)
-    public void setCmsResultConfiguration(CmsResultConfigurer configuration) {
-        this.configuration = configuration;
+    @Autowired
+    public void setCmsResultConfiguration(CmsResultConfigurer resultConfigurer) {
+        this.resultConfigurer = resultConfigurer;
     }
 
     @Bean
     public ConverterRegistryService converterRegistryService() {
         final ConverterRegistryService converterRegistryService = new ConverterRegistryService();
 
-        configuration.addConverters(converterRegistryService);
-        configuration.addPostConverters(converterRegistryService);
+        resultConfigurer.addConverters(converterRegistryService);
+        resultConfigurer.addPostConverters(converterRegistryService);
 
         return converterRegistryService;
     }
 
     @Bean
     public CmsResultContextFacade cmsResultContext() {
-        return new CmsResultContextFacade(configuration, converterRegistryService());
+        CmsResultContextFacade cmsResultContextFacade = new CmsResultContextFacade(resultConfigurer, converterRegistryService());
+        cmsResultContextFacade.setProcessingChain(cmsResultProcessingChain(cmsResultContextFacade));
+        return cmsResultContextFacade;
     }
 
     @Bean
     public CmsManager cmsManager() {
-        return new CmsManagerImpl(cmsService(), cmsResultProcessingChain(), cmsResultContext());
+        return new CmsManagerImpl(cmsService(), cmsResultContext());
     }
 
     @Bean
@@ -47,13 +49,12 @@ public class CmsResultInternalConfiguration {
     }
 
     @Bean
-    public CmsResultProcessingChain cmsResultProcessingChain() {
+    public CmsResultProcessingChain cmsResultProcessingChain(final CmsResultContextFacade cmsResultContext) {
         final CmsResultProcessingChainImpl cmsResultProcessingChain = new CmsResultProcessingChainImpl();
         cmsResultProcessingChain.addProcessor(new SimpleTypeProcessor());
-        cmsResultProcessingChain.addProcessor(new EnumProcessor());
-        cmsResultProcessingChain.addProcessor(new CollectionProcessor(cmsResultContext(), cmsResultProcessingChain));
-        cmsResultProcessingChain.addProcessor(new MapProcessor(cmsResultContext(), cmsResultProcessingChain));
-        cmsResultProcessingChain.addProcessor(new ComplexTypeProcessor(cmsResultContext(), cmsResultProcessingChain));
+        cmsResultProcessingChain.addProcessor(new CollectionProcessor(cmsResultContext));
+        cmsResultProcessingChain.addProcessor(new MapProcessor(cmsResultContext));
+        cmsResultProcessingChain.addProcessor(new ComplexTypeProcessor(cmsResultContext));
 
         return cmsResultProcessingChain;
     }
