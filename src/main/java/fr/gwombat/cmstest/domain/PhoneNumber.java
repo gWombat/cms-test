@@ -1,7 +1,6 @@
 package fr.gwombat.cmstest.domain;
 
 import fr.gwombat.cmstest.annotations.CmsElement;
-import fr.gwombat.cmstest.converters.PhoneNumberConverter;
 
 /**
  * Created by guillaume.
