@@ -39,7 +39,8 @@ public class ComplexTypeProcessor implements CmsProcessor {
     public boolean isExecutable(Class<?> clazz) {
         return !TypeUtils.isCollection(clazz)
                 && !TypeUtils.isSimpleType(clazz)
-                && !TypeUtils.isMap(clazz);
+                && !TypeUtils.isMap(clazz)
+                && !TypeUtils.isEnum(clazz);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package fr.gwombat.cmstest;
 
+import fr.gwombat.cmstest.domain.Gender;
 import fr.gwombat.cmstest.domain.MyCmsPageResultWrapper;
 import fr.gwombat.cmstest.domain.Person;
 import fr.gwombat.cmstest.manager.CmsManager;
@@ -39,7 +40,7 @@ public class CmsManagerTest {
     private CmsManager cmsManager;
 
     @Before
-    public void setup(){
+    public void setup() {
         final Map<String, String> results = new HashMap<>(0);
 
         // simple properties
@@ -68,6 +69,9 @@ public class CmsManagerTest {
         results.put("repo/fr/my-page/person/address/street", "Test street");
         results.put("repo/fr/my-page/person/address/city", "Paris");
         results.put("repo/fr/my-page/person/address/zip", "12345");
+
+        // enum
+        results.put("repo/fr/my-page/person/gender", "MALE");
 
         given(cmsService.getCmsResults()).willReturn(results);
     }
@@ -105,6 +109,8 @@ public class CmsManagerTest {
         assertNotNull(personResult.getIdTests());
         assertEquals(new Long(1), personResult.getIdTests().get("id1"));
         assertEquals(new Long(3), personResult.getIdTests().get("id3"));
+
+        assertEquals(Gender.MALE, personResult.getGender());
 
         logger.info("{}", personResult);
 

@@ -25,6 +25,7 @@ public class Person {
     private List<Integer>     intList;
     private Map<String, Long> idTests;
     private Address           address;
+    private Gender            gender;
 
     public String getName() {
         return name;
@@ -84,6 +85,14 @@ public class Person {
         this.address = address;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -94,6 +103,7 @@ public class Person {
                 ", intList=" + intList +
                 ", idTests=" + idTests +
                 ", address=" + address +
+                ", gender=" + gender +
                 '}';
     }
 }

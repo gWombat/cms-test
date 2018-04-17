@@ -16,6 +16,7 @@ public class CmsConfiguration {
     public CmsResultProcessingChain cmsResultProcessingChain() {
         final CmsResultProcessingChainImpl cmsResultProcessingChain = new CmsResultProcessingChainImpl();
         cmsResultProcessingChain.addProcessor(new SimpleTypeProcessor());
+        cmsResultProcessingChain.addProcessor(new EnumProcessor());
         cmsResultProcessingChain.addProcessor(new CollectionProcessor(cmsResultProcessingChain));
         cmsResultProcessingChain.addProcessor(new MapProcessor(cmsResultProcessingChain));
         cmsResultProcessingChain.addProcessor(new ComplexTypeProcessor(cmsResultProcessingChain));

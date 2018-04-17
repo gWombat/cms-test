@@ -22,6 +22,10 @@ public final class TypeUtils {
         return Map.class.isAssignableFrom(parameterType);
     }
 
+    public static boolean isEnum(final Class<?> parameterType) {
+        return Enum.class.isAssignableFrom(parameterType);
+    }
+
     public static boolean isSimpleType(final Class<?> parameterType) {
         if (parameterType == Byte.class || parameterType == byte.class)
             return true;
