@@ -8,9 +8,12 @@ import java.util.Map;
  *
  * @since 14/04/2018
  */
+@FunctionalInterface
 public interface CmsProcessor {
 
-    boolean isExecutable(Class<?> clazz);
+    default boolean isExecutable(Class<?> clazz) {
+        return true;
+    }
 
     Object process(Map<String, String> cmsResults, Class<?> clazz, ParameterizedType parameterizedType, String rootName);
 }

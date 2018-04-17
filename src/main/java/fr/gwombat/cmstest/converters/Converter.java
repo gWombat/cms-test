@@ -7,6 +7,7 @@ import java.util.Map;
  *
  * @since 14/04/2018
  */
+@FunctionalInterface
 public interface Converter<T> {
 
     T convert(Map<String, String> cmsResults);

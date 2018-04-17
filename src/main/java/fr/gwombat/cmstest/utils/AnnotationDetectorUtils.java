@@ -39,16 +39,16 @@ public final class AnnotationDetectorUtils {
         return null;
     }
 
-    public static String detectRootNodeName(final Class<?> resultType) {
-        final CmsPageResult annotationCmsPageResult = resultType.getAnnotation(CmsPageResult.class);
+    public static String detectRootNodeName(final Class<?> clazz) {
+        final CmsPageResult annotationCmsPageResult = clazz.getAnnotation(CmsPageResult.class);
         if (annotationCmsPageResult != null && !annotationCmsPageResult.rootNode().equals(EMPTY_STRING))
             return annotationCmsPageResult.rootNode();
 
-        final CmsElement annotationCmsElement = resultType.getAnnotation(CmsElement.class);
+        final CmsElement annotationCmsElement = clazz.getAnnotation(CmsElement.class);
         if (annotationCmsElement != null && !annotationCmsElement.nodeName().equals(EMPTY_STRING))
             return annotationCmsElement.nodeName();
 
-        return toCamelCase(resultType.getSimpleName());
+        return toCamelCase(clazz.getSimpleName());
     }
 
     private static String toCamelCase(String value) {

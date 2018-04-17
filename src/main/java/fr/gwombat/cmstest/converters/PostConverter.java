@@ -5,6 +5,7 @@ package fr.gwombat.cmstest.converters;
  *
  * @since 16/04/2018
  */
+@FunctionalInterface
 public interface PostConverter<T> {
 
     void postConvert(T targetObject);
