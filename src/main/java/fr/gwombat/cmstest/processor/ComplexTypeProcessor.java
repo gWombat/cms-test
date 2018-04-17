@@ -4,7 +4,9 @@ import fr.gwombat.cmstest.annotations.CmsElement;
 import fr.gwombat.cmstest.converters.Converter;
 import fr.gwombat.cmstest.converters.DefaultConverter;
 import fr.gwombat.cmstest.converters.PostConverter;
+import fr.gwombat.cmstest.utils.AnnotationDetectorUtils;
 import fr.gwombat.cmstest.utils.CmsProcessorUtils;
+import fr.gwombat.cmstest.utils.TypeUtils;
 import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,9 +37,9 @@ public class ComplexTypeProcessor implements CmsProcessor {
 
     @Override
     public boolean isExecutable(Class<?> clazz) {
-        return !CmsProcessorUtils.isCollection(clazz)
-                && !CmsProcessorUtils.isSimpleType(clazz)
-                && !CmsProcessorUtils.isMap(clazz);
+        return !TypeUtils.isCollection(clazz)
+                && !TypeUtils.isSimpleType(clazz)
+                && !TypeUtils.isMap(clazz);
     }
 
     @Override
@@ -48,19 +51,26 @@ public class ComplexTypeProcessor implements CmsProcessor {
 
         try {
             target = clazz.newInstance();
-            for (Field field : clazz.getDeclaredFields()) {
+
+            final List<Field> fields = TypeUtils.getAllFields(clazz);
+            final List<Method> methods = TypeUtils.getAllMethods(clazz);
+
+            for (Field field : fields) {
                 logger.debug("Working on field {}", field);
-                String propertyKey = CmsProcessorUtils.detectPropertyName(field);
+                field.setAccessible(true); // for performance!
+                String propertyKey = AnnotationDetectorUtils.detectPropertyName(field);
                 final String setterName = getSetterName(field.getName());
                 logger.trace("Setter name: {}", setterName);
 
-                final Method matchMethod = findMatchingMethod(clazz, setterName);
-                if (matchMethod == null)
+                final Method matchMethod = findMatchingMethod(methods, setterName);
+                if (matchMethod == null) {
+                    logger.warn("No matching method found for field: {}. Please add correct setter!", field);
                     continue;
+                }
 
                 logger.debug("Matching method found! {}", matchMethod);
                 if (matchMethod.getParameterCount() == 1) {
-                    final String candidatePropertyName = CmsProcessorUtils.detectPropertyName(matchMethod);
+                    final String candidatePropertyName = AnnotationDetectorUtils.detectPropertyName(matchMethod);
                     if (candidatePropertyName != null)
                         propertyKey = candidatePropertyName;
 
@@ -85,8 +95,8 @@ public class ComplexTypeProcessor implements CmsProcessor {
         return target;
     }
 
-    private static Method findMatchingMethod(Class<?> clazz, String setterName) {
-        for (Method method : clazz.getMethods()) {
+    private static Method findMatchingMethod(final List<Method> methods, final String setterName) {
+        for (Method method : methods) {
             if (method.getName().equals(setterName))
                 return method;
         }

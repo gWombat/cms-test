@@ -1,6 +1,7 @@
 package fr.gwombat.cmstest.processor;
 
 import fr.gwombat.cmstest.utils.CmsProcessorUtils;
+import fr.gwombat.cmstest.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class MapProcessor implements CmsProcessor {
 
     @Override
     public boolean isExecutable(Class<?> clazz) {
-        return CmsProcessorUtils.isMap(clazz);
+        return TypeUtils.isMap(clazz);
     }
 
     @Override

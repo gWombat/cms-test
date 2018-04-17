@@ -1,6 +1,7 @@
 package fr.gwombat.cmstest.processor;
 
 import fr.gwombat.cmstest.utils.CmsProcessorUtils;
+import fr.gwombat.cmstest.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class CollectionProcessor implements CmsProcessor {
 
     @Override
     public boolean isExecutable(Class<?> clazz) {
-        return CmsProcessorUtils.isCollection(clazz);
+        return TypeUtils.isCollection(clazz);
     }
 
     @Override

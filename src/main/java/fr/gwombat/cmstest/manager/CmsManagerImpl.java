@@ -4,7 +4,9 @@ import fr.gwombat.cmstest.annotations.CmsElement;
 import fr.gwombat.cmstest.annotations.CmsPageResult;
 import fr.gwombat.cmstest.processor.CmsResultProcessingChain;
 import fr.gwombat.cmstest.service.CmsService;
+import fr.gwombat.cmstest.utils.AnnotationDetectorUtils;
 import fr.gwombat.cmstest.utils.CmsProcessorUtils;
+import fr.gwombat.cmstest.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,9 +34,9 @@ public class CmsManagerImpl implements CmsManager {
     @Override
     public <T> T produceCmsPageResult(final Class<T> resultType) {
 
-        if (CmsProcessorUtils.isMap(resultType)
-                || CmsProcessorUtils.isCollection(resultType)
-                || CmsProcessorUtils.isSimpleType(resultType))
+        if (TypeUtils.isMap(resultType)
+                || TypeUtils.isCollection(resultType)
+                || TypeUtils.isSimpleType(resultType))
             throw new IllegalArgumentException("Root result object must be a complex object!");
 
         final Map<String, String> cmsResults = cmsService.getCmsResults();
@@ -43,7 +45,7 @@ public class CmsManagerImpl implements CmsManager {
         if (subListResult.isEmpty())
             return null;
 
-        return (T) cmsResultProcessingChain.process(resultType, subListResult, null, CmsProcessorUtils.detectRootNodeName(resultType));
+        return (T) cmsResultProcessingChain.process(resultType, subListResult, null, AnnotationDetectorUtils.detectRootNodeName(resultType));
     }
 
 

@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.processor;
 
-import fr.gwombat.cmstest.utils.CmsProcessorUtils;
+import fr.gwombat.cmstest.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ public class SimpleTypeProcessor implements CmsProcessor {
 
     @Override
     public boolean isExecutable(Class<?> clazz) {
-        return CmsProcessorUtils.isSimpleType(clazz);
+        return TypeUtils.isSimpleType(clazz);
     }
 
     @Override
@@ -27,6 +27,6 @@ public class SimpleTypeProcessor implements CmsProcessor {
         LOGGER.debug("available results: {}", cmsResults);
         final String value = cmsResults.get(rootName);
         LOGGER.debug("Corresponding value is: {}", value);
-        return CmsProcessorUtils.castValue(clazz, value);
+        return TypeUtils.castValue(clazz, value);
     }
 }
