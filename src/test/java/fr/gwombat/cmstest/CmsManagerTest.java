@@ -105,6 +105,8 @@ public class CmsManagerTest {
 
         assertNotNull(personResult.getAddress());
         assertEquals("12345", personResult.getAddress().getZip());
+        assertEquals("Paris", personResult.getAddress().getCity());
+        assertEquals("Test street", personResult.getAddress().getStreet());
 
         assertNotNull(personResult.getIdTests());
         assertEquals(new Long(1), personResult.getIdTests().get("id1"));
