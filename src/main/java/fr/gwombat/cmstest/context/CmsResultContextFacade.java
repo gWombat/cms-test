@@ -21,10 +21,6 @@ public class CmsResultContextFacade {
         return resultConfigurer.getRootNodePrefix();
     }
 
-    public String getRootNodePath(final String nodeName) {
-        return resultConfigurer.getRootNodePath(nodeName);
-    }
-
     public String getPropertySeparator() {
         return resultConfigurer.getPropertySeparator();
     }

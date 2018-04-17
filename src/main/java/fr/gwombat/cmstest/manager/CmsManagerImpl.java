@@ -35,7 +35,7 @@ public class CmsManagerImpl implements CmsManager {
         if (cmsResults.isEmpty())
             return null;
 
-        final String nodeName = cmsResultContextFacade.getRootNodePath(AnnotationDetectorUtils.detectRootNodeName(resultType));
+        final String nodeName = cmsResultContextFacade.getRootNodePrefix() + AnnotationDetectorUtils.detectRootNodeName(resultType);
         return (T) cmsResultContextFacade.getProcessingChain().process(resultType, cmsResults, null, nodeName);
     }
 }

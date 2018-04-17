@@ -23,8 +23,4 @@ public interface CmsResultConfigurer {
         return null;
     }
 
-    default String getRootNodePath(final String nodeName) {
-        return getRootNodePrefix() + nodeName;
-    }
-
 }
