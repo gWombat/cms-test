@@ -20,11 +20,13 @@ public class CmsResultProcessingChainImpl implements CmsResultProcessingChain {
 
     @Override
     public Object process(final Class<?> clazz, Map<String, String> cmsResults, ParameterizedType parameterizedType, final String rootName) {
-        for (CmsProcessor processor : processors)
-            if (processor.isExecutable(clazz))
-                return processor.process(cmsResults, clazz, parameterizedType, rootName);
+        final CmsProcessor matchingProcessor = processors
+                .stream()
+                .filter(p -> p.isExecutable(clazz))
+                .findFirst()
+                .orElse((r, c, p, n) -> null);
 
-        return null;
+        return matchingProcessor.process(cmsResults, clazz, parameterizedType, rootName);
     }
 
     public void addProcessor(CmsProcessor cmsProcessor) {

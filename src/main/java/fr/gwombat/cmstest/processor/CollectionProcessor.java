@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.processor;
 
-import fr.gwombat.cmstest.utils.CmsProcessorUtils;
+import fr.gwombat.cmstest.configuration.CmsResultConfiguration;
 import fr.gwombat.cmstest.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +15,12 @@ import java.util.Map;
  *
  * @since 15/04/2018
  */
-public class CollectionProcessor implements CmsProcessor {
+public class CollectionProcessor extends AbstractCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProcessor.class);
 
-    private final CmsResultProcessingChain cmsResultProcessingChain;
-
-    public CollectionProcessor(CmsResultProcessingChain cmsResultProcessingChain) {
-        this.cmsResultProcessingChain = cmsResultProcessingChain;
+    public CollectionProcessor(final CmsResultProcessingChain cmsResultProcessingChain, final CmsResultConfiguration cmsResultConfiguration) {
+        super(cmsResultConfiguration, cmsResultProcessingChain);
     }
 
     @Override
@@ -33,7 +31,7 @@ public class CollectionProcessor implements CmsProcessor {
     @Override
     public Object process(final Map<String, String> cmsResults, final Class<?> clazz, final ParameterizedType parameterizedType, final String rootName) {
         LOGGER.debug("Invoking collection processing on root node name: {}", rootName);
-        final Map<String, Map<String, String>> collectionItems = CmsProcessorUtils.getGroupedCmsResultsSubMap(cmsResults, rootName);
+        final Map<String, Map<String, String>> collectionItems = getGroupedCmsResultsSubMap(cmsResults, rootName);
         final List<Object> collection = new ArrayList<>(collectionItems.size());
         final Class<?> parameterizedTypeClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 

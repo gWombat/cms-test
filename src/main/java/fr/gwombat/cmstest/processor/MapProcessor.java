@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.processor;
 
-import fr.gwombat.cmstest.utils.CmsProcessorUtils;
+import fr.gwombat.cmstest.configuration.CmsResultConfiguration;
 import fr.gwombat.cmstest.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,14 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MapProcessor implements CmsProcessor {
+public class MapProcessor extends AbstractCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapProcessor.class);
 
-    private final CmsResultProcessingChain cmsResultProcessingChain;
-
-    public MapProcessor(CmsResultProcessingChain cmsResultProcessingChain) {
-        this.cmsResultProcessingChain = cmsResultProcessingChain;
+    public MapProcessor(CmsResultConfiguration cmsResultConfiguration, CmsResultProcessingChain cmsResultProcessingChain) {
+        super(cmsResultConfiguration, cmsResultProcessingChain);
     }
 
     @Override
@@ -29,7 +27,7 @@ public class MapProcessor implements CmsProcessor {
     @Override
     public Object process(Map<String, String> cmsResults, Class<?> clazz, ParameterizedType parameterizedType, String rootName) {
         LOGGER.debug("Invoking map processing on root node name: {}", rootName);
-        final Map<String, Map<String, String>> mapItems = CmsProcessorUtils.getGroupedCmsResultsSubMap(cmsResults, rootName);
+        final Map<String, Map<String, String>> mapItems = getGroupedCmsResultsSubMap(cmsResults, rootName);
         final Map<String, Object> map = new HashMap<>(mapItems.size());
 
         final Class<?> valueClass = (Class<?>) parameterizedType.getActualTypeArguments()[1];

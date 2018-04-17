@@ -17,11 +17,16 @@ public class CmsConfiguration {
         final CmsResultProcessingChainImpl cmsResultProcessingChain = new CmsResultProcessingChainImpl();
         cmsResultProcessingChain.addProcessor(new SimpleTypeProcessor());
         cmsResultProcessingChain.addProcessor(new EnumProcessor());
-        cmsResultProcessingChain.addProcessor(new CollectionProcessor(cmsResultProcessingChain));
-        cmsResultProcessingChain.addProcessor(new MapProcessor(cmsResultProcessingChain));
-        cmsResultProcessingChain.addProcessor(new ComplexTypeProcessor(cmsResultProcessingChain));
+        cmsResultProcessingChain.addProcessor(new CollectionProcessor(cmsResultProcessingChain, cmsResultConfiguration()));
+        cmsResultProcessingChain.addProcessor(new MapProcessor(cmsResultConfiguration(), cmsResultProcessingChain));
+        cmsResultProcessingChain.addProcessor(new ComplexTypeProcessor(cmsResultConfiguration(), cmsResultProcessingChain));
 
         return cmsResultProcessingChain;
+    }
+
+    @Bean
+    public CmsResultConfiguration cmsResultConfiguration() {
+        return new DefaultCmsResultConfiguration();
     }
 
 }

@@ -1,11 +1,11 @@
 package fr.gwombat.cmstest.processor;
 
 import fr.gwombat.cmstest.annotations.CmsElement;
+import fr.gwombat.cmstest.configuration.CmsResultConfiguration;
 import fr.gwombat.cmstest.converters.Converter;
 import fr.gwombat.cmstest.converters.DefaultConverter;
 import fr.gwombat.cmstest.converters.PostConverter;
 import fr.gwombat.cmstest.utils.AnnotationDetectorUtils;
-import fr.gwombat.cmstest.utils.CmsProcessorUtils;
 import fr.gwombat.cmstest.utils.TypeUtils;
 import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
@@ -25,14 +25,12 @@ import java.util.Map;
  * @since 14/04/2018
  */
 @Service
-public class ComplexTypeProcessor implements CmsProcessor {
+public class ComplexTypeProcessor extends AbstractCmsProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(ComplexTypeProcessor.class);
 
-    private final CmsResultProcessingChain cmsResultProcessingChain;
-
-    public ComplexTypeProcessor(CmsResultProcessingChain cmsResultProcessingChain) {
-        this.cmsResultProcessingChain = cmsResultProcessingChain;
+    public ComplexTypeProcessor(CmsResultConfiguration cmsResultConfiguration, CmsResultProcessingChain cmsResultProcessingChain) {
+        super(cmsResultConfiguration, cmsResultProcessingChain);
     }
 
     @Override
@@ -97,11 +95,10 @@ public class ComplexTypeProcessor implements CmsProcessor {
     }
 
     private static Method findMatchingMethod(final List<Method> methods, final String setterName) {
-        for (Method method : methods) {
-            if (method.getName().equals(setterName))
-                return method;
-        }
-        return null;
+        return methods.stream()
+                .filter(method -> method.getName().equals(setterName))
+                .findFirst()
+                .orElse(null);
     }
 
     private static boolean isCustomConverterAvailable(final Class<?> clazz) {
@@ -109,13 +106,13 @@ public class ComplexTypeProcessor implements CmsProcessor {
         return cmsElementAnnotation != null && cmsElementAnnotation.converter() != DefaultConverter.class;
     }
 
-    private static Object applyCustomConverter(final Class<?> clazz, final Map<String, String> cmsResults, final String rootName) {
+    private Object applyCustomConverter(final Class<?> clazz, final Map<String, String> cmsResults, final String rootName) {
         Object target = null;
         final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
         try {
             final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
             final Converter converter = converterClass.newInstance();
-            final Map<String, String> test = CmsProcessorUtils.getCmsResultsSubMap(cmsResults, rootName);
+            final Map<String, String> test = getCmsResultsSubMap(cmsResults, rootName);
             logger.debug("Invoking Converter {}...", converter);
             target = converter.convert(test);
             applyPostConverters(target);
