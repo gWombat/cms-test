@@ -14,6 +14,12 @@ public final class TypeUtils {
     private TypeUtils() {
     }
 
+    public static boolean isComplexType(final Class<?> parameterType){
+        return !isCollection(parameterType)
+                && !isMap(parameterType)
+                && !isSimpleType(parameterType);
+    }
+
     public static boolean isCollection(final Class<?> parameterType) {
         return Collection.class.isAssignableFrom(parameterType);
     }

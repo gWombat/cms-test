@@ -5,7 +5,6 @@ import fr.gwombat.cmstest.domain.MyCmsPageResultWrapper;
 import fr.gwombat.cmstest.domain.Person;
 import fr.gwombat.cmstest.manager.CmsManager;
 import fr.gwombat.cmstest.service.CmsService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -39,8 +39,41 @@ public class CmsManagerTest {
     @Autowired
     private CmsManager cmsManager;
 
-    @Before
-    public void setup() {
+    @Test
+    public void test_simple_object() {
+        final Map<String, String> results = new HashMap<>(0);
+        results.put("repo/fr/myId", "1000");
+        given(cmsService.getCmsResults()).willReturn(results);
+
+        final Integer intTest = cmsManager.produceSimpleObject(Integer.class, "myId");
+        assertNotNull(intTest);
+        assertEquals(new Integer(1000), intTest);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_simple_object_without_propertyName_should_fail() {
+        final Map<String, String> results = new HashMap<>(0);
+        results.put("repo/fr/myId", "1000");
+        given(cmsService.getCmsResults()).willReturn(results);
+
+        cmsManager.produceComplexObject(Integer.class);
+    }
+
+//    @Test
+//    public void test_collection_object() {
+//        final Map<String, String> results = new HashMap<>(0);
+//        results.put("repo/fr/list/0", "0");
+//        results.put("repo/fr/list/1", "1");
+//        results.put("repo/fr/list/2", "2");
+//        given(cmsService.getCmsResults()).willReturn(results);
+//
+//        final List<Integer> list = cmsManager.produceSimpleObject(List.class, "list");
+//        assertNotNull(list);
+//        assertEquals(results.size(), list.size());
+//    }
+
+    @Test
+    public void test_complex_object() {
         final Map<String, String> results = new HashMap<>(0);
 
         // simple properties
@@ -74,17 +107,14 @@ public class CmsManagerTest {
         results.put("repo/fr/my-page/person/gender", "MALE");
 
         given(cmsService.getCmsResults()).willReturn(results);
-    }
 
-    @Test
-    public void test() {
         // 1. test with wrapper
-        final MyCmsPageResultWrapper wrapper = cmsManager.produceCmsPageResult(MyCmsPageResultWrapper.class);
+        final MyCmsPageResultWrapper wrapper = cmsManager.produceComplexObject(MyCmsPageResultWrapper.class);
         assertNotNull(wrapper);
         final Person personResult = wrapper.getPerson();
 
         // 2. test without wrapper
-//        final Person personResult = cmsManager.produceCmsPageResult(Person.class);
+//        final Person personResult = cmsManager.produceComplexObject(Person.class);
 
         assertNotNull(personResult);
         assertEquals("Fabbi", personResult.getName());

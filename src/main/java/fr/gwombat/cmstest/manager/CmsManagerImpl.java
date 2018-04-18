@@ -23,19 +23,25 @@ public class CmsManagerImpl implements CmsManager {
     }
 
     @Override
-    public <T> T produceCmsPageResult(final Class<T> resultType) {
+    public <T> T produceComplexObject(final Class<T> resultType) {
+        return produceSimpleObject(resultType, null);
+    }
 
-        if (TypeUtils.isMap(resultType)
-                || TypeUtils.isCollection(resultType)
-                || TypeUtils.isSimpleType(resultType))
-            throw new IllegalArgumentException("Root result object must be a complex object!");
+    @Override
+    public <T> T produceSimpleObject(Class<T> resultType, String propertyName) {
+        if (!TypeUtils.isComplexType(resultType) && propertyName == null)
+            throw new IllegalArgumentException("The target object must be a complex object or the propertyName parameter should be set");
 
         final Map<String, String> cmsResults = cmsService.getCmsResults();
 
         if (cmsResults.isEmpty())
             return null;
 
-        final String nodeName = cmsResultContextFacade.getRootNodePrefix() + AnnotationDetectorUtils.detectRootNodeName(resultType);
+        String currentNodeName = propertyName;
+        if (currentNodeName == null)
+            currentNodeName = AnnotationDetectorUtils.detectRootNodeName(resultType);
+        final String nodeName = cmsResultContextFacade.getRootNodePrefix() + currentNodeName;
+
         return (T) cmsResultContextFacade.getProcessingChain().process(resultType, cmsResults, null, nodeName);
     }
 }
