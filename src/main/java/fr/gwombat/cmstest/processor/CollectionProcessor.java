@@ -40,8 +40,8 @@ public class CollectionProcessor extends AbstractCmsProcessor {
 
         LOGGER.debug("Processing collection of type: {}<{}>", clazz, parameterizedTypeClass);
         for (Map.Entry<String, Map<String, String>> entry : collectionItems.entrySet()) {
-            final String propertyKey = rootName + "/" + entry.getKey();
-            final Object listItem = cmsResultContextFacade.getProcessingChain().process(parameterizedTypeClass, cmsResults, null, propertyKey);
+            final String propertyPath = cmsResultContextFacade.getPropertyPath(rootName, entry.getKey());
+            final Object listItem = cmsResultContextFacade.getProcessingChain().process(parameterizedTypeClass, cmsResults, null, propertyPath);
             LOGGER.debug("collection item built: {}", listItem);
             collection.add(listItem);
         }

@@ -74,8 +74,8 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
                     if (field.getGenericType() instanceof ParameterizedType)
                         fieldParameterizedType = (ParameterizedType) field.getGenericType();
 
-                    propertyKey = rootName + "/" + propertyKey;
-                    final Object paramValue = cmsResultContextFacade.getProcessingChain().process(parameterType, cmsResults, fieldParameterizedType, propertyKey);
+                    final String propertyPath = cmsResultContextFacade.getPropertyPath(rootName, propertyKey);
+                    final Object paramValue = cmsResultContextFacade.getProcessingChain().process(parameterType, cmsResults, fieldParameterizedType, propertyPath);
 
                     logger.debug("Invoking setter {}", matchMethod);
                     matchMethod.invoke(target, paramValue);

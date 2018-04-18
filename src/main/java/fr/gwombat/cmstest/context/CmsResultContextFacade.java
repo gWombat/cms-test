@@ -23,6 +23,10 @@ public class CmsResultContextFacade {
         this.temporalRegistryService = temporalRegistryService;
     }
 
+    public String getPropertyPath(final String rootPath, final String propertyName){
+        return rootPath + getPropertySeparator() + propertyName;
+    }
+
     public String getRootNodePrefix() {
         return resultConfigurer.getRootNodePrefix();
     }

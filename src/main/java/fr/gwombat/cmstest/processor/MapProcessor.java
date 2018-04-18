@@ -32,8 +32,8 @@ public class MapProcessor extends AbstractCmsProcessor {
 
         LOGGER.debug("Processing map of type: {}<{},{}>", clazz, String.class, valueClass);
         for (Map.Entry<String, Map<String, String>> entry : mapItems.entrySet()) {
-            final String propertyKey = rootName + "/" + entry.getKey();
-            final Object mapItem = cmsResultContextFacade.getProcessingChain().process(valueClass, cmsResults, null, propertyKey);
+            final String propertyPath = cmsResultContextFacade.getPropertyPath(rootName, entry.getKey());
+            final Object mapItem = cmsResultContextFacade.getProcessingChain().process(valueClass, cmsResults, null, propertyPath);
             LOGGER.debug("map item built: {}", mapItem);
             map.put(entry.getKey(), mapItem);
         }
