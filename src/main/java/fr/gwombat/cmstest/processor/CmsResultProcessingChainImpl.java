@@ -24,7 +24,7 @@ public class CmsResultProcessingChainImpl implements CmsResultProcessingChain {
                 .stream()
                 .filter(p -> p.isExecutable(clazz))
                 .findFirst()
-                .orElse((r, c, p, n) -> null);
+                .orElse((r, c, p, n) -> null); // should throw exception...
 
         return matchingProcessor.process(cmsResults, clazz, parameterizedType, rootName);
     }

@@ -12,9 +12,9 @@ import java.util.Map;
  * @since 14/04/2018
  */
 // 1. with wrapper:
-@CmsElement(postConverters = PersonPostConverter.class)
+//@CmsElement(postConverters = PersonPostConverter.class)
 // 2. without wrapper:
-//@CmsElement(nodeName = "my-page/person")
+@CmsElement(nodeName = "my-page/person")
 public class Person {
 
     @CmsProperty(name = "nom")

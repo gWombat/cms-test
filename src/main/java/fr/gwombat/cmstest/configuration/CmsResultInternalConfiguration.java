@@ -5,6 +5,7 @@ import fr.gwombat.cmstest.manager.CmsManager;
 import fr.gwombat.cmstest.manager.CmsManagerImpl;
 import fr.gwombat.cmstest.processor.*;
 import fr.gwombat.cmstest.registry.ConverterRegistryService;
+import fr.gwombat.cmstest.registry.TemporalRegistryService;
 import fr.gwombat.cmstest.service.CmsService;
 import fr.gwombat.cmstest.service.CmsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,17 @@ public class CmsResultInternalConfiguration {
     }
 
     @Bean
+    public TemporalRegistryService temporalRegistryService() {
+        final TemporalRegistryService temporalRegistryService = new TemporalRegistryService();
+
+        resultConfigurer.addDateTimeFormatter(temporalRegistryService);
+
+        return temporalRegistryService;
+    }
+
+    @Bean
     public CmsResultContextFacade cmsResultContext() {
-        CmsResultContextFacade cmsResultContextFacade = new CmsResultContextFacade(resultConfigurer, converterRegistryService());
+        CmsResultContextFacade cmsResultContextFacade = new CmsResultContextFacade(resultConfigurer, converterRegistryService(), temporalRegistryService());
         cmsResultContextFacade.setProcessingChain(cmsResultProcessingChain(cmsResultContextFacade));
         return cmsResultContextFacade;
     }
@@ -52,6 +62,7 @@ public class CmsResultInternalConfiguration {
     public CmsResultProcessingChain cmsResultProcessingChain(final CmsResultContextFacade cmsResultContext) {
         final CmsResultProcessingChainImpl cmsResultProcessingChain = new CmsResultProcessingChainImpl();
         cmsResultProcessingChain.addProcessor(new SimpleTypeProcessor());
+        cmsResultProcessingChain.addProcessor(new TemporalProcessor(cmsResultContext));
         cmsResultProcessingChain.addProcessor(new CollectionProcessor(cmsResultContext));
         cmsResultProcessingChain.addProcessor(new MapProcessor(cmsResultContext));
         cmsResultProcessingChain.addProcessor(new ComplexTypeProcessor(cmsResultContext));

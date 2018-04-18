@@ -33,9 +33,7 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
 
     @Override
     public boolean isExecutable(Class<?> clazz) {
-        return !TypeUtils.isCollection(clazz)
-                && !TypeUtils.isSimpleType(clazz)
-                && !TypeUtils.isMap(clazz);
+        return TypeUtils.isComplexType(clazz);
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.time.temporal.Temporal;
 import java.util.*;
 
 public final class TypeUtils {
@@ -14,10 +15,20 @@ public final class TypeUtils {
     private TypeUtils() {
     }
 
-    public static boolean isComplexType(final Class<?> parameterType){
+    public static boolean isComplexType(final Class<?> parameterType) {
         return !isCollection(parameterType)
                 && !isMap(parameterType)
-                && !isSimpleType(parameterType);
+                && !isSimpleType(parameterType)
+                && !isTemporal(parameterType)
+                && !isLegacyDate(parameterType);
+    }
+
+    public static boolean isLegacyDate(final Class<?> parameterType) {
+        return Date.class.isAssignableFrom(parameterType);
+    }
+
+    public static boolean isTemporal(final Class<?> parameterType) {
+        return Temporal.class.isAssignableFrom(parameterType);
     }
 
     public static boolean isCollection(final Class<?> parameterType) {
@@ -69,6 +80,8 @@ public final class TypeUtils {
             return Short.parseShort(cmsValue);
         if (Enum.class.isAssignableFrom(parameterType))
             return Enum.valueOf((Class<Enum>) parameterType, cmsValue);
+        if (isTemporal(parameterType))
+            return null;
 
         return parameterType.cast(cmsValue);
     }
@@ -82,11 +95,12 @@ public final class TypeUtils {
     }
 
     private static List<Method> addMethodsRecursively(final List<Method> methods, final Class<?> clazz) {
+        if (clazz == Object.class)
+            return methods;
+
         LOGGER.debug("Adding all methods of class {}", clazz);
         methods.addAll(Arrays.asList(clazz.getMethods()));
-        while (clazz.getSuperclass() != Object.class)
-            addMethodsRecursively(methods, clazz.getSuperclass());
-        return methods;
+        return addMethodsRecursively(methods, clazz.getSuperclass());
     }
 
     public static List<Field> getAllFields(final Class<?> clazz) {
@@ -98,10 +112,11 @@ public final class TypeUtils {
     }
 
     private static List<Field> addFieldsRecursively(final List<Field> fields, final Class<?> clazz) {
+        if (clazz == Object.class)
+            return fields;
+
         LOGGER.debug("Adding all fields of class {}", clazz);
         fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-        while (clazz.getSuperclass() != Object.class)
-            addFieldsRecursively(fields, clazz.getSuperclass());
-        return fields;
+        return addFieldsRecursively(fields, clazz.getSuperclass());
     }
 }

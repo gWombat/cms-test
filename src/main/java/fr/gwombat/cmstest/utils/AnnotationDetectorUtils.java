@@ -4,11 +4,15 @@ import fr.gwombat.cmstest.annotations.CmsElement;
 import fr.gwombat.cmstest.annotations.CmsNode;
 import fr.gwombat.cmstest.annotations.CmsPageResult;
 import fr.gwombat.cmstest.annotations.CmsProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public final class AnnotationDetectorUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationDetectorUtils.class);
 
     private static final String EMPTY_STRING = "";
 
@@ -40,15 +44,35 @@ public final class AnnotationDetectorUtils {
     }
 
     public static String detectRootNodeName(final Class<?> clazz) {
-        final CmsPageResult annotationCmsPageResult = clazz.getAnnotation(CmsPageResult.class);
+        LOGGER.debug("Looking for annotation {} in {} hierarchy...", CmsPageResult.class, clazz);
+        final CmsPageResult annotationCmsPageResult = findCmsPageResultAnnotationRecursively(clazz);
         if (annotationCmsPageResult != null && !annotationCmsPageResult.rootNode().equals(EMPTY_STRING))
             return annotationCmsPageResult.rootNode();
 
-        final CmsElement annotationCmsElement = clazz.getAnnotation(CmsElement.class);
+        LOGGER.debug("Looking for annotation {} in {} hierarchy...", CmsElement.class, clazz);
+        final CmsElement annotationCmsElement = findCmsElementAnnotationRecursively(clazz);
         if (annotationCmsElement != null && !annotationCmsElement.nodeName().equals(EMPTY_STRING))
             return annotationCmsElement.nodeName();
 
         return toCamelCase(clazz.getSimpleName());
+    }
+
+    private static CmsElement findCmsElementAnnotationRecursively(final Class<?> clazz) {
+        if (clazz == Object.class)
+            return null;
+        LOGGER.debug("Looking for annotation {} in class {}", CmsElement.class, clazz);
+        if (clazz.getAnnotation(CmsElement.class) != null)
+            return clazz.getAnnotation(CmsElement.class);
+        return findCmsElementAnnotationRecursively(clazz.getSuperclass());
+    }
+
+    private static CmsPageResult findCmsPageResultAnnotationRecursively(final Class<?> clazz) {
+        if (clazz == Object.class)
+            return null;
+        LOGGER.debug("Looking for annotation {} in class {}", CmsPageResult.class, clazz);
+        if (clazz.getAnnotation(CmsPageResult.class) != null)
+            return clazz.getAnnotation(CmsPageResult.class);
+        return findCmsPageResultAnnotationRecursively(clazz.getSuperclass());
     }
 
     private static String toCamelCase(String value) {

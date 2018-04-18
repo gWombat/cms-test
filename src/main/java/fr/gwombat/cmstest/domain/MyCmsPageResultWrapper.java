@@ -11,10 +11,6 @@ import fr.gwombat.cmstest.annotations.CmsPageResult;
 @CmsPageResult(rootNode = "my-page")
 public class MyCmsPageResultWrapper {
 
-    //  /repo/fr/my-page/person/nom
-    //  /repo/fr/my-page/person/firstname
-    //  /repo/fr/my-page/person/age
-
     @CmsNode
     private Person person;
 

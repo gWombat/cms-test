@@ -1,5 +1,6 @@
 package fr.gwombat.cmstest;
 
+import fr.gwombat.cmstest.domain.ExtendedPerson;
 import fr.gwombat.cmstest.domain.Gender;
 import fr.gwombat.cmstest.domain.MyCmsPageResultWrapper;
 import fr.gwombat.cmstest.domain.Person;
@@ -42,7 +43,7 @@ public class CmsManagerTest {
     @Test
     public void test_simple_object() {
         final Map<String, String> results = new HashMap<>(0);
-        results.put("repo/fr/myId", "1000");
+        results.put("fr/my-site/myId", "1000");
         given(cmsService.getCmsResults()).willReturn(results);
 
         final Integer intTest = cmsManager.produceSimpleObject(Integer.class, "myId");
@@ -53,7 +54,7 @@ public class CmsManagerTest {
     @Test(expected = IllegalArgumentException.class)
     public void test_simple_object_without_propertyName_should_fail() {
         final Map<String, String> results = new HashMap<>(0);
-        results.put("repo/fr/myId", "1000");
+        results.put("fr/my-site/myId", "1000");
         given(cmsService.getCmsResults()).willReturn(results);
 
         cmsManager.produceComplexObject(Integer.class);
@@ -62,9 +63,9 @@ public class CmsManagerTest {
 //    @Test
 //    public void test_collection_object() {
 //        final Map<String, String> results = new HashMap<>(0);
-//        results.put("repo/fr/list/0", "0");
-//        results.put("repo/fr/list/1", "1");
-//        results.put("repo/fr/list/2", "2");
+//        results.put("fr/my-site/list/0", "0");
+//        results.put("fr/my-site/list/1", "1");
+//        results.put("fr/my-site/list/2", "2");
 //        given(cmsService.getCmsResults()).willReturn(results);
 //
 //        final List<Integer> list = cmsManager.produceSimpleObject(List.class, "list");
@@ -72,40 +73,45 @@ public class CmsManagerTest {
 //        assertEquals(results.size(), list.size());
 //    }
 
-    @Test
-    public void test_complex_object() {
+    private Map<String, String> initResults(){
         final Map<String, String> results = new HashMap<>(0);
 
         // simple properties
-        results.put("repo/fr/my-page/person/nom", "Fabbi");
-        results.put("repo/fr/my-page/person/firstname", "Guillaume");
-        results.put("repo/fr/my-page/person/age", "30");
+        results.put("fr/my-site/my-page/person/nom", "Fabbi");
+        results.put("fr/my-site/my-page/person/firstname", "Guillaume");
+        results.put("fr/my-site/my-page/person/age", "30");
 
         // lists
         // list complex
-        results.put("repo/fr/my-page/person/phones/0/name", "Mobile");
-        results.put("repo/fr/my-page/person/phones/0/number", "0623456789");
-        results.put("repo/fr/my-page/person/phones/1/name", "Home");
-        results.put("repo/fr/my-page/person/phones/1/number", "0123456789");
+        results.put("fr/my-site/my-page/person/phones/0/name", "Mobile");
+        results.put("fr/my-site/my-page/person/phones/0/number", "0623456789");
+        results.put("fr/my-site/my-page/person/phones/1/name", "Home");
+        results.put("fr/my-site/my-page/person/phones/1/number", "0123456789");
 
         // list simple
-        results.put("repo/fr/my-page/person/list/1", "1");
-        results.put("repo/fr/my-page/person/list/2", "2");
-        results.put("repo/fr/my-page/person/list/3", "3");
+        results.put("fr/my-site/my-page/person/list/1", "1");
+        results.put("fr/my-site/my-page/person/list/2", "2");
+        results.put("fr/my-site/my-page/person/list/3", "3");
 
         // map
-        results.put("repo/fr/my-page/person/id_test/id1", "1");
-        results.put("repo/fr/my-page/person/id_test/id2", "2");
-        results.put("repo/fr/my-page/person/id_test/id3", "3");
+        results.put("fr/my-site/my-page/person/id_test/id1", "1");
+        results.put("fr/my-site/my-page/person/id_test/id2", "2");
+        results.put("fr/my-site/my-page/person/id_test/id3", "3");
 
         // complex object
-        results.put("repo/fr/my-page/person/address/street", "Test street");
-        results.put("repo/fr/my-page/person/address/city", "Paris");
-        results.put("repo/fr/my-page/person/address/zip", "12345");
+        results.put("fr/my-site/my-page/person/address/street", "Test street");
+        results.put("fr/my-site/my-page/person/address/city", "Paris");
+        results.put("fr/my-site/my-page/person/address/zip", "12345");
 
         // enum
-        results.put("repo/fr/my-page/person/gender", "MALE");
+        results.put("fr/my-site/my-page/person/gender", "MALE");
 
+        return results;
+    }
+
+    @Test
+    public void test_complex_object() {
+        final Map<String, String> results = initResults();
         given(cmsService.getCmsResults()).willReturn(results);
 
         // 1. test with wrapper
@@ -145,6 +151,19 @@ public class CmsManagerTest {
         assertEquals(Gender.MALE, personResult.getGender());
 
         logger.info("{}", personResult);
+    }
 
+    @Test
+    public void test_inheritance(){
+        final Map<String, String> results = initResults();
+        results.put("fr/my-site/my-page/person/customProperty", "test");
+        results.put("fr/my-site/my-page/person/birthDate", "01/02/1985");
+        given(cmsService.getCmsResults()).willReturn(results);
+
+        final ExtendedPerson personResult = cmsManager.produceComplexObject(ExtendedPerson.class);
+        assertNotNull(personResult);
+        assertEquals("test", personResult.getCustomProperty());
+        assertNotNull(personResult.getBirthDate());
+        logger.info("{}", personResult);
     }
 }
