@@ -34,7 +34,7 @@ public class TemporalRegistryService implements TemporalRegistry {
             try {
                 return TemporalUtils.cast(clazz, formatter, formattedTemporal);
             } catch (DateTimeParseException e) {
-                LOGGER.debug("Enable to parse {}: {}", formattedTemporal, e.getMessage());
+                LOGGER.info("Enable to parse {}: {}", formattedTemporal, e.getMessage());
             }
         }
         return null;

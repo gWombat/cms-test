@@ -44,6 +44,8 @@ public class CustomCmsConfiguration extends AbstractJackrabbitConfiguration {
 
     @Override
     public void addDateTimeFormatter(TemporalRegistry temporalRegistry) {
-        temporalRegistry.addDateTimeFormatter(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        temporalRegistry
+                .addDateTimeFormatter(DateTimeFormatter.ofPattern("dd/Mm/yyyy HH:mm:ss"))
+                .addDateTimeFormatter(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }
