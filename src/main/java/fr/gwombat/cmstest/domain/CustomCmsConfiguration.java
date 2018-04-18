@@ -1,15 +1,15 @@
 package fr.gwombat.cmstest.domain;
 
 import fr.gwombat.cmstest.configuration.EnableCms;
-import fr.gwombat.cmstest.configuration.adapters.AbstractJackrabbitConfiguration;
-import fr.gwombat.cmstest.registry.ConverterRegistry;
-import fr.gwombat.cmstest.registry.TemporalRegistry;
+import fr.gwombat.cmstest.custom.jackrabbit.AbstractJackrabbitConfiguration;
+import fr.gwombat.cmstest.mapping.registry.ConverterRegistry;
+import fr.gwombat.cmstest.mapping.registry.TemporalRegistry;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.format.DateTimeFormatter;
 
-@Configuration
 @EnableCms
+@Configuration
 public class CustomCmsConfiguration extends AbstractJackrabbitConfiguration {
 
     @Override
@@ -43,7 +43,7 @@ public class CustomCmsConfiguration extends AbstractJackrabbitConfiguration {
     }
 
     @Override
-    public void addDateTimeFormatter(TemporalRegistry temporalRegistry) {
+    public void addDateTimeFormatters(TemporalRegistry temporalRegistry) {
         temporalRegistry
                 .addDateTimeFormatter(DateTimeFormatter.ofPattern("dd/Mm/yyyy HH:mm:ss"))
                 .addDateTimeFormatter(DateTimeFormatter.ofPattern("dd/MM/yyyy"));

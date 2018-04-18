@@ -1,7 +1,8 @@
 package fr.gwombat.cmstest.configuration;
 
-import fr.gwombat.cmstest.registry.ConverterRegistry;
-import fr.gwombat.cmstest.registry.TemporalRegistry;
+import fr.gwombat.cmstest.mapping.registry.CallConfigurerRegistry;
+import fr.gwombat.cmstest.mapping.registry.ConverterRegistry;
+import fr.gwombat.cmstest.mapping.registry.TemporalRegistry;
 
 /**
  * Created by guillaume.
@@ -16,8 +17,11 @@ public interface CmsResultConfigurer {
     default void addPostConverters(ConverterRegistry converterRegistry) {
     }
 
-    default void addDateTimeFormatter(TemporalRegistry temporalRegistry) {
+    default void addDateTimeFormatters(TemporalRegistry temporalRegistry) {
 
+    }
+
+    default void addCallConfigurers(CallConfigurerRegistry callConfigurerRegistry) {
     }
 
     default String getPropertySeparator() {

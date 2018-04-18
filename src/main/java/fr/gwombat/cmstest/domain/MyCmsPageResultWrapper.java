@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest.domain;
 
-import fr.gwombat.cmstest.annotations.CmsNode;
-import fr.gwombat.cmstest.annotations.CmsPageResult;
+import fr.gwombat.cmstest.mapping.annotations.CmsNode;
+import fr.gwombat.cmstest.mapping.annotations.CmsPageResult;
 
 /**
  * Created by guillaume.

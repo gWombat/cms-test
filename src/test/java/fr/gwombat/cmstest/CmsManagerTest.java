@@ -4,8 +4,8 @@ import fr.gwombat.cmstest.domain.ExtendedPerson;
 import fr.gwombat.cmstest.domain.Gender;
 import fr.gwombat.cmstest.domain.MyCmsPageResultWrapper;
 import fr.gwombat.cmstest.domain.Person;
-import fr.gwombat.cmstest.manager.CmsManager;
-import fr.gwombat.cmstest.service.CmsService;
+import fr.gwombat.cmstest.mapping.manager.CmsManager;
+import fr.gwombat.cmstest.mapping.service.CmsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;

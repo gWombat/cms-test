@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.domain;
 
-import fr.gwombat.cmstest.converters.PostConverter;
+import fr.gwombat.cmstest.mapping.converters.PostConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.domain;
 
-import fr.gwombat.cmstest.annotations.CmsElement;
+import fr.gwombat.cmstest.mapping.annotations.CmsElement;
 
 /**
  * Created by guillaume.

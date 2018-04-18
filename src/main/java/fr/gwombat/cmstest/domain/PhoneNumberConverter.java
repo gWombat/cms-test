@@ -1,7 +1,6 @@
 package fr.gwombat.cmstest.domain;
 
-import fr.gwombat.cmstest.converters.Converter;
-import fr.gwombat.cmstest.domain.PhoneNumber;
+import fr.gwombat.cmstest.mapping.converters.Converter;
 
 import java.text.MessageFormat;
 import java.util.Map;
