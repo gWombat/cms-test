@@ -4,6 +4,7 @@ import fr.gwombat.cmstest.core.CmsCall;
 import fr.gwombat.cmstest.core.CmsCallWrapper;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallWrapper;
+import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
 import fr.gwombat.cmstest.domain.ExtendedPerson;
 import fr.gwombat.cmstest.domain.Gender;
 import fr.gwombat.cmstest.domain.MyCmsPageResultWrapper;
@@ -68,8 +69,8 @@ public class CmsManagerTest {
         List<CmsPath> calls = cmsManager.createCmsCallsTemporary(cmsCallWrapper, 1188L);
         assertNotNull(calls);
         assertEquals(2, calls.size());
-        assertEquals("my-page/person/", calls.get(0).getPath());
-        assertEquals("fr/my-site/my-page/person", calls.get(0).getFullCmsPath());
+        assertEquals("my-page/person/", ((JackrabbitPath) calls.get(0)).getPath());
+        assertEquals("fr/my-site/my-page/person", ((JackrabbitPath) calls.get(0)).getFullCmsPath());
     }
 
     //@Test

@@ -5,7 +5,8 @@ import fr.gwombat.cmstest.core.CmsCall;
 import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
 import fr.gwombat.cmstest.core.context.LocalContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
-import fr.gwombat.cmstest.core.path.CmsPathBuilder;
+import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
+import fr.gwombat.cmstest.custom.jackrabbit.path.CmsPathBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -31,15 +32,15 @@ public class DefaultNodesConfigurer extends AbstractCallConfigurer<JackrabbitCal
             return;
 
         for (CmsCall cmsCall : cmsCallList) {
-            final CmsPath cmsPath = CmsPathBuilder.init(rootName, cmsConfigurer.getPropertySeparator())
+            final JackrabbitPath jackrabbitPath = CmsPathBuilder.init(rootName, cmsConfigurer.getPropertySeparator())
                     .brand(context.getBrandNode())
                     .language(context.getLanguage())
                     .addPath(cmsCall.getPath())
                     .withCityIdIfNecessary(cmsCall.isAppendCityToPath(), context.getDepartureCityId())
                     .build();
-            cmsPathList.add(cmsPath);
+            cmsPathList.add(jackrabbitPath);
             if (cmsCall.getCalls() != null)
-                configureCallInternal(cmsCall.getCalls(), cmsPathList, context, cmsPath.getPath());
+                configureCallInternal(cmsCall.getCalls(), cmsPathList, context, jackrabbitPath.getPath());
         }
     }
 
