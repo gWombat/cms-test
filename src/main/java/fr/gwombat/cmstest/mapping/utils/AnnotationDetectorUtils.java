@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public final class AnnotationDetectorUtils {
@@ -43,7 +44,7 @@ public final class AnnotationDetectorUtils {
         return null;
     }
 
-    public static String detectRootNodeName(final Class<?> clazz) {
+    public static String detectRootNodeName(final Class<?> clazz) throws InvocationTargetException, IllegalAccessException {
         LOGGER.debug("Looking for annotation {} in {} hierarchy...", CmsPageResult.class, clazz);
         final CmsPageResult annotationCmsPageResult = findCmsPageResultAnnotationRecursively(clazz);
         if (annotationCmsPageResult != null && !annotationCmsPageResult.rootNode().equals(EMPTY_STRING))

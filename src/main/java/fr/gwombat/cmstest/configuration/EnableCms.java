@@ -7,6 +7,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import(CmsResultInternalConfiguration.class)
+@Import({CmsResultInternalConfiguration.class})
 public @interface EnableCms {
+
 }

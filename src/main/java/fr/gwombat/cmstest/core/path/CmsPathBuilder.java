@@ -35,16 +35,6 @@ public final class CmsPathBuilder {
         return this;
     }
 
-    public CmsPathBuilder withCityId(final Integer cityId, final String separator) {
-        if (cityId != null) {
-            removeTrailingSlash();
-            pathBuilder.append(separator);
-            pathBuilder.append(String.valueOf(cityId));
-            addTrailingSlash();
-        }
-        return this;
-    }
-
     public CmsPathBuilder addProperty(final String propertyName) {
         if (propertyName != null && !"".equals(propertyName))
             pathBuilder.append(propertyName);
@@ -63,8 +53,20 @@ public final class CmsPathBuilder {
         return this;
     }
 
-    public CmsPathBuilder withCityId(final Integer cityId) {
-        return withCityId(cityId, "-");
+    public CmsPathBuilder withCityIdIfNecessary(boolean isNecessary, Long cityId) {
+        if (isNecessary)
+            return withCityId(cityId, "");
+        return this;
+    }
+
+    public CmsPathBuilder withCityId(final Long cityId, final String separator) {
+        if (cityId != null) {
+            removeTrailingSlash();
+            pathBuilder.append(separator);
+            pathBuilder.append(String.valueOf(cityId));
+            addTrailingSlash();
+        }
+        return this;
     }
 
     public CmsPath build() {

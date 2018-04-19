@@ -1,20 +1,19 @@
 package fr.gwombat.cmstest.domain;
 
 import fr.gwombat.cmstest.configuration.EnableCms;
-import fr.gwombat.cmstest.core.CmsCall;
-import fr.gwombat.cmstest.custom.jackrabbit.AbstractJackrabbitConfiguration;
-import fr.gwombat.cmstest.mapping.registry.CallConfigurerRegistry;
+import fr.gwombat.cmstest.custom.jackrabbit.AbstractJackrabbitConfigurer;
+import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitBaseConfiguration;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistry;
 import fr.gwombat.cmstest.mapping.registry.TemporalRegistry;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 
 @EnableCms
 @Configuration
-public class CustomCmsConfiguration extends AbstractJackrabbitConfiguration {
+@Import(JackrabbitBaseConfiguration.class)
+public class CustomCmsConfigurer extends AbstractJackrabbitConfigurer {
 
     @Override
     public String getLanguage() {
@@ -51,23 +50,5 @@ public class CustomCmsConfiguration extends AbstractJackrabbitConfiguration {
         temporalRegistry
                 .addDateTimeFormatter(DateTimeFormatter.ofPattern("dd/Mm/yyyy HH:mm:ss"))
                 .addDateTimeFormatter(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-    }
-
-    @Override
-    public void addCallConfigurers(CallConfigurerRegistry callConfigurerRegistry) {
-
-    }
-
-    @Bean
-    public CmsCall myPageCmsConfiguration() {
-        final CmsCall cmsCall = new CmsCall();
-        cmsCall.setPath("my-page");
-
-        CmsCall childCall = new CmsCall();
-        childCall.setPath("person");
-
-        cmsCall.addCall(childCall);
-
-        return cmsCall;
     }
 }

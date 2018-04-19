@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.mapping.processor;
 
-import fr.gwombat.cmstest.mapping.context.CmsResultContextFacade;
+import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +19,8 @@ public class CollectionProcessor extends AbstractCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CollectionProcessor.class);
 
-    public CollectionProcessor(final CmsResultContextFacade cmsResultContextFacade) {
-        super(cmsResultContextFacade);
+    public CollectionProcessor(final CmsContextFacade cmsContextFacade) {
+        super(cmsContextFacade);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class CollectionProcessor extends AbstractCmsProcessor {
 
         LOGGER.debug("Processing collection of type: {}<{}>", clazz, parameterizedTypeClass);
         for (Map.Entry<String, Map<String, String>> entry : collectionItems.entrySet()) {
-            final String propertyPath = cmsResultContextFacade.getPropertyPath(rootName, entry.getKey());
-            final Object listItem = cmsResultContextFacade.getProcessingChain().process(parameterizedTypeClass, cmsResults, null, propertyPath);
+            final String propertyPath = cmsContextFacade.getPropertyPath(rootName, entry.getKey());
+            final Object listItem = cmsContextFacade.getProcessingChain().process(parameterizedTypeClass, cmsResults, null, propertyPath);
             LOGGER.debug("collection item built: {}", listItem);
             collection.add(listItem);
         }

@@ -9,7 +9,7 @@ import fr.gwombat.cmstest.mapping.registry.TemporalRegistry;
  *
  * @since 14/04/2018
  */
-public interface CmsResultConfigurer {
+public interface CmsConfigurer {
 
     default void addConverters(ConverterRegistry converterRegistry) {
     }

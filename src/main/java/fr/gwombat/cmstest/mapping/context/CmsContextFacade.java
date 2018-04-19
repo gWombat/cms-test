@@ -1,31 +1,28 @@
 package fr.gwombat.cmstest.mapping.context;
 
-import fr.gwombat.cmstest.configuration.CmsResultConfigurer;
-import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
+import fr.gwombat.cmstest.configuration.CmsConfigurer;
+import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
 import fr.gwombat.cmstest.mapping.converters.Converter;
 import fr.gwombat.cmstest.mapping.converters.PostConverter;
 import fr.gwombat.cmstest.mapping.processor.CmsResultProcessingChain;
-import fr.gwombat.cmstest.mapping.registry.CallConfigurerRegistryService;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistryService;
 import fr.gwombat.cmstest.mapping.registry.TemporalRegistryService;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
-import java.util.List;
 
-public class CmsResultContextFacade {
+public class CmsContextFacade {
 
-    private final CmsResultConfigurer           resultConfigurer;
-    private final ConverterRegistryService      converterRegistryService;
-    private final TemporalRegistryService       temporalRegistryService;
-    private final CallConfigurerRegistryService callConfigurerRegistryService;
-    private       CmsResultProcessingChain      processingChain;
+    private CmsConfigurer            resultConfigurer;
+    private ConverterRegistryService converterRegistryService;
+    private TemporalRegistryService  temporalRegistryService;
+    private CmsResultProcessingChain processingChain;
+    private CallConfigurationChain   callConfigurationChain;
 
-    public CmsResultContextFacade(CmsResultConfigurer resultConfigurer, ConverterRegistryService converterRegistryService, TemporalRegistryService temporalRegistryService, CallConfigurerRegistryService callConfigurerRegistryService) {
+    public CmsContextFacade(CmsConfigurer resultConfigurer, ConverterRegistryService converterRegistryService, TemporalRegistryService temporalRegistryService) {
         this.resultConfigurer = resultConfigurer;
         this.converterRegistryService = converterRegistryService;
         this.temporalRegistryService = temporalRegistryService;
-        this.callConfigurerRegistryService = callConfigurerRegistryService;
     }
 
     public String getPropertyPath(final String rootPath, final String propertyName) {
@@ -48,10 +45,6 @@ public class CmsResultContextFacade {
         return temporalRegistryService.parse(clazz, date);
     }
 
-    public List<AbstractCallConfigurer> getCallConfigurers() {
-        return callConfigurerRegistryService.getConfigurers();
-    }
-
     public <T> Converter<T> getConverter(Class<T> clazz) {
         return converterRegistryService.getConverter(clazz);
     }
@@ -62,5 +55,37 @@ public class CmsResultContextFacade {
 
     public void setProcessingChain(CmsResultProcessingChain processingChain) {
         this.processingChain = processingChain;
+    }
+
+    public CallConfigurationChain getCallConfigurationChain() {
+        return callConfigurationChain;
+    }
+
+    public void setCallConfigurationChain(CallConfigurationChain callConfigurationChain) {
+        this.callConfigurationChain = callConfigurationChain;
+    }
+
+    public CmsConfigurer getResultConfigurer() {
+        return resultConfigurer;
+    }
+
+    public void setResultConfigurer(CmsConfigurer resultConfigurer) {
+        this.resultConfigurer = resultConfigurer;
+    }
+
+    public ConverterRegistryService getConverterRegistryService() {
+        return converterRegistryService;
+    }
+
+    public void setConverterRegistryService(ConverterRegistryService converterRegistryService) {
+        this.converterRegistryService = converterRegistryService;
+    }
+
+    public TemporalRegistryService getTemporalRegistryService() {
+        return temporalRegistryService;
+    }
+
+    public void setTemporalRegistryService(TemporalRegistryService temporalRegistryService) {
+        this.temporalRegistryService = temporalRegistryService;
     }
 }

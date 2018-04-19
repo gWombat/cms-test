@@ -1,6 +1,7 @@
 package fr.gwombat.cmstest.core.configurers;
 
-import fr.gwombat.cmstest.core.CmsConfiguration;
+import fr.gwombat.cmstest.core.CmsCallWrapper;
+import fr.gwombat.cmstest.core.context.LocalContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
 
 import java.util.ArrayList;
@@ -15,13 +16,13 @@ public class CallConfigurationChainImpl implements CallConfigurationChain {
     }
 
     @Override
-    public void configure(final CmsConfiguration cmsConfiguration, final List<CmsPath> calls) {
+    public void configure(final CmsCallWrapper cmsCallWrapper, final List<CmsPath> calls, final LocalContext context) {
         configurers.stream()
-                .filter(c -> c.isExecutable(cmsConfiguration))
-                .forEach(c -> c.configure(cmsConfiguration, calls));
+                .filter(c -> c.isExecutable(cmsCallWrapper))
+                .forEach(c -> c.configure(cmsCallWrapper, calls, context));
     }
 
     public void addConfigurers(List<AbstractCallConfigurer> configurers) {
-        configurers.addAll(configurers);
+        this.configurers.addAll(configurers);
     }
 }

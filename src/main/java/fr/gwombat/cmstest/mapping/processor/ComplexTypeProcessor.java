@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest.mapping.processor;
 
 import fr.gwombat.cmstest.mapping.annotations.CmsElement;
-import fr.gwombat.cmstest.mapping.context.CmsResultContextFacade;
+import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.converters.Converter;
 import fr.gwombat.cmstest.mapping.converters.DefaultConverter;
 import fr.gwombat.cmstest.mapping.converters.PostConverter;
@@ -27,8 +27,8 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(ComplexTypeProcessor.class);
 
-    public ComplexTypeProcessor(CmsResultContextFacade cmsResultContextFacade) {
-        super(cmsResultContextFacade);
+    public ComplexTypeProcessor(CmsContextFacade cmsContextFacade) {
+        super(cmsContextFacade);
     }
 
     @Override
@@ -74,8 +74,8 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
                     if (field.getGenericType() instanceof ParameterizedType)
                         fieldParameterizedType = (ParameterizedType) field.getGenericType();
 
-                    final String propertyPath = cmsResultContextFacade.getPropertyPath(rootName, propertyKey);
-                    final Object paramValue = cmsResultContextFacade.getProcessingChain().process(parameterType, cmsResults, fieldParameterizedType, propertyPath);
+                    final String propertyPath = cmsContextFacade.getPropertyPath(rootName, propertyKey);
+                    final Object paramValue = cmsContextFacade.getProcessingChain().process(parameterType, cmsResults, fieldParameterizedType, propertyPath);
 
                     logger.debug("Invoking setter {}", matchMethod);
                     matchMethod.invoke(target, paramValue);
@@ -106,7 +106,7 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
         final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
         try {
             final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
-            final Converter converter = cmsResultContextFacade.getConverter(converterClass);
+            final Converter converter = cmsContextFacade.getConverter(converterClass);
             if (converter == null)
                 throw new IllegalArgumentException("Enable to find a converter of class " + converterClass);
 
@@ -124,7 +124,7 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
         final CmsElement annotation = target.getClass().getAnnotation(CmsElement.class);
         if (annotation != null) {
             for (Class<? extends PostConverter> postConverterClass : annotation.postConverters()) {
-                final PostConverter postConverter = cmsResultContextFacade.getPostConverter(postConverterClass);
+                final PostConverter postConverter = cmsContextFacade.getPostConverter(postConverterClass);
                 logger.debug("Invoking post-converter {}...", postConverter);
                 postConverter.postConvert(target);
             }

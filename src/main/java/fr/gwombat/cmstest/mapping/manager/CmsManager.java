@@ -1,11 +1,18 @@
 package fr.gwombat.cmstest.mapping.manager;
 
+import fr.gwombat.cmstest.core.CmsCallWrapper;
+import fr.gwombat.cmstest.core.path.CmsPath;
+
+import java.util.List;
+
 /**
  * Created by guillaume.
  *
  * @since 14/04/2018
  */
 public interface CmsManager {
+
+    List<CmsPath> createCmsCallsTemporary(CmsCallWrapper callWrapper, Long departureCityId);
 
     <T> T produceComplexObject(Class<T> resultType);
 

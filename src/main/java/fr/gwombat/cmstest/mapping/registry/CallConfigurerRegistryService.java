@@ -2,11 +2,16 @@ package fr.gwombat.cmstest.mapping.registry;
 
 import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CallConfigurerRegistryService implements CallConfigurerRegistry {
 
-    private List<AbstractCallConfigurer> configurers;
+    private final List<AbstractCallConfigurer> configurers;
+
+    public CallConfigurerRegistryService() {
+        configurers = new ArrayList<>(0);
+    }
 
     @Override
     public CallConfigurerRegistry addCallConfigurer(AbstractCallConfigurer callConfigurer) {

@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.mapping.processor;
 
-import fr.gwombat.cmstest.mapping.context.CmsResultContextFacade;
+import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +13,8 @@ public class TemporalProcessor extends AbstractCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TemporalProcessor.class);
 
-    public TemporalProcessor(CmsResultContextFacade cmsResultContextFacade) {
-        super(cmsResultContextFacade);
+    public TemporalProcessor(CmsContextFacade cmsContextFacade) {
+        super(cmsContextFacade);
     }
 
     @Override
@@ -28,6 +28,6 @@ public class TemporalProcessor extends AbstractCmsProcessor {
         LOGGER.debug("available results: {}", cmsResults);
         final String value = cmsResults.get(rootName);
         LOGGER.debug("Corresponding value is: {}", value);
-        return cmsResultContextFacade.parseDate((Class<? extends Temporal>) clazz, value);
+        return cmsContextFacade.parseDate((Class<? extends Temporal>) clazz, value);
     }
 }
