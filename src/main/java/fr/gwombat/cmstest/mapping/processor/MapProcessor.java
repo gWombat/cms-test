@@ -1,5 +1,6 @@
 package fr.gwombat.cmstest.mapping.processor;
 
+import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class MapProcessor extends AbstractCmsProcessor {
     }
 
     @Override
-    public Object process(Map<String, String> cmsResults, Class<?> clazz, ParameterizedType parameterizedType, String rootName) {
+    public Object process(Map<String, String> cmsResults, Class<?> clazz, ParameterizedType parameterizedType, String rootName) throws CmsMappingException {
         LOGGER.debug("Invoking map processing on root node name: {}", rootName);
         final Map<String, Map<String, String>> mapItems = getGroupedCmsResultsSubMap(cmsResults, rootName);
         final Map<String, Object> map = new HashMap<>(mapItems.size());

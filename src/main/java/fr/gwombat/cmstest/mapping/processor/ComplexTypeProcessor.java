@@ -1,5 +1,6 @@
 package fr.gwombat.cmstest.mapping.processor;
 
+import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.annotations.CmsElement;
 import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.converters.Converter;
@@ -37,7 +38,7 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
     }
 
     @Override
-    public Object process(final Map<String, String> cmsResults, final Class<?> clazz, ParameterizedType parameterizedType, final String rootName) {
+    public Object process(final Map<String, String> cmsResults, final Class<?> clazz, ParameterizedType parameterizedType, final String rootName) throws CmsMappingException {
         Object target = null;
 
         if (isCustomConverterAvailable(clazz))
@@ -84,7 +85,7 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
             }
             applyPostConverters(target);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            e.printStackTrace();
+            throw new CmsMappingException(e);
         }
         return target;
     }
@@ -101,21 +102,21 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
         return cmsElementAnnotation != null && cmsElementAnnotation.converter() != DefaultConverter.class;
     }
 
-    private Object applyCustomConverter(final Class<?> clazz, final Map<String, String> cmsResults, final String rootName) {
+    private Object applyCustomConverter(final Class<?> clazz, final Map<String, String> cmsResults, final String rootName) throws CmsMappingException {
         Object target = null;
         final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
         try {
             final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
             final Converter converter = cmsContextFacade.getConverter(converterClass);
             if (converter == null)
-                throw new IllegalArgumentException("Enable to find a converter of class " + converterClass);
+                throw new CmsMappingException("Enable to find a converter of class " + converterClass);
 
             final Map<String, String> test = getCmsResultsSubMap(cmsResults, rootName);
             logger.debug("Invoking Converter {}...", converter);
             target = converter.convert(test);
             applyPostConverters(target);
         } catch (IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
+            throw new CmsMappingException(e);
         }
         return target;
     }

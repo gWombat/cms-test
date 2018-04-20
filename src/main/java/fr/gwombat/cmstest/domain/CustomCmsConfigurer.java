@@ -1,18 +1,15 @@
 package fr.gwombat.cmstest.domain;
 
-import fr.gwombat.cmstest.configuration.EnableCms;
 import fr.gwombat.cmstest.custom.jackrabbit.AbstractJackrabbitConfigurer;
-import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitBaseConfiguration;
+import fr.gwombat.cmstest.custom.jackrabbit.annotations.EnableJackrabbit;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistry;
 import fr.gwombat.cmstest.mapping.registry.TemporalRegistry;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import java.time.format.DateTimeFormatter;
 
-@EnableCms
+@EnableJackrabbit
 @Configuration
-@Import(JackrabbitBaseConfiguration.class)
 public class CustomCmsConfigurer extends AbstractJackrabbitConfigurer {
 
     @Override

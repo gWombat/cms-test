@@ -1,5 +1,6 @@
 package fr.gwombat.cmstest.mapping.processor;
 
+import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class CollectionProcessor extends AbstractCmsProcessor {
     }
 
     @Override
-    public Object process(final Map<String, String> cmsResults, final Class<?> clazz, final ParameterizedType parameterizedType, final String rootName) {
+    public Object process(final Map<String, String> cmsResults, final Class<?> clazz, final ParameterizedType parameterizedType, final String rootName) throws CmsMappingException {
         LOGGER.debug("Invoking collection processing on root node name: {}", rootName);
         if(parameterizedType == null)
             throw new IllegalArgumentException("The type of collection must be set");
