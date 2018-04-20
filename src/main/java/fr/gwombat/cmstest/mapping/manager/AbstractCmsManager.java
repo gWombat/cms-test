@@ -2,15 +2,15 @@ package fr.gwombat.cmstest.mapping.manager;
 
 import fr.gwombat.cmstest.configuration.CmsConfigurer;
 import fr.gwombat.cmstest.core.CmsCallWrapper;
+import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
 import fr.gwombat.cmstest.core.context.LocalContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.exceptions.CmsRuntimeException;
-import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
+import fr.gwombat.cmstest.mapping.processor.CmsResultProcessingChain;
 import fr.gwombat.cmstest.mapping.service.CmsService;
 import fr.gwombat.cmstest.mapping.utils.AnnotationDetectorUtils;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -24,16 +24,17 @@ import java.util.Map;
  */
 public abstract class AbstractCmsManager<U extends CmsConfigurer> implements CmsManager {
 
-    private CmsService       cmsService;
-    private CmsContextFacade cmsContextFacade;
-    private U                cmsConfigurer;
+    private CmsService               cmsService;
+    private CmsResultProcessingChain cmsResultProcessingChain;
+    private CallConfigurationChain   callConfigurationChain;
+    private U                        cmsConfigurer;
 
     @Override
     public List<CmsPath> createCmsCallsTemporary(CmsCallWrapper callWrapper, Long departureCityId) {
 
         final LocalContext localContext = createLocalContext(cmsConfigurer, departureCityId);
         final List<CmsPath> calls = new ArrayList<>(0);
-        cmsContextFacade.getCallConfigurationChain().configure(callWrapper, calls, localContext);
+        callConfigurationChain.configure(callWrapper, calls, localContext);
         return calls;
     }
 
@@ -62,27 +63,28 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
                 e.printStackTrace();
             }
         }
-        final String nodeName = cmsContextFacade.getRootNodePrefix() + currentNodeName;
+        final String nodeName = cmsConfigurer.getRootNodePrefix() + currentNodeName;
 
         try {
-            return (T) cmsContextFacade.getProcessingChain().process(resultType, cmsResults, null, nodeName);
+            return (T) cmsResultProcessingChain.process(resultType, cmsResults, null, nodeName);
         } catch (CmsMappingException e) {
             throw new CmsRuntimeException(e);
         }
     }
 
-    @Autowired
     public void setCmsService(CmsService cmsService) {
         this.cmsService = cmsService;
     }
 
-    @Autowired
-    public void setCmsContextFacade(CmsContextFacade cmsContextFacade) {
-        this.cmsContextFacade = cmsContextFacade;
-    }
-
-    @Autowired
     public void setCmsConfigurer(U cmsConfigurer) {
         this.cmsConfigurer = cmsConfigurer;
+    }
+
+    public void setCmsResultProcessingChain(CmsResultProcessingChain cmsResultProcessingChain) {
+        this.cmsResultProcessingChain = cmsResultProcessingChain;
+    }
+
+    public void setCallConfigurationChain(CallConfigurationChain callConfigurationChain) {
+        this.callConfigurationChain = callConfigurationChain;
     }
 }

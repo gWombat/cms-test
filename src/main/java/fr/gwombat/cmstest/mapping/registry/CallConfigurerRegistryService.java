@@ -7,20 +7,26 @@ import java.util.List;
 
 public class CallConfigurerRegistryService implements CallConfigurerRegistry {
 
-    private final List<AbstractCallConfigurer> configurers;
+    private final List<AbstractCallConfigurer<?>> configurers;
 
     public CallConfigurerRegistryService() {
         configurers = new ArrayList<>(0);
     }
 
     @Override
-    public CallConfigurerRegistry addCallConfigurer(AbstractCallConfigurer callConfigurer) {
+    public CallConfigurerRegistry addCallConfigurer(AbstractCallConfigurer<?> callConfigurer) {
         configurers.add(callConfigurer);
 
         return this;
     }
 
-    public List<AbstractCallConfigurer> getConfigurers() {
+    public List<AbstractCallConfigurer<?>> getConfigurers() {
         return configurers;
+    }
+
+    @Override
+    public CallConfigurerRegistry addCallConfigurers(List<AbstractCallConfigurer<?>> configurers) {
+        this.configurers.addAll(configurers);
+        return this;
     }
 }

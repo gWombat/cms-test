@@ -1,11 +1,12 @@
 package fr.gwombat.cmstest.mapping.processor;
 
+import fr.gwombat.cmstest.configuration.CmsConfigurer;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.annotations.CmsElement;
-import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.converters.Converter;
 import fr.gwombat.cmstest.mapping.converters.DefaultConverter;
 import fr.gwombat.cmstest.mapping.converters.PostConverter;
+import fr.gwombat.cmstest.mapping.registry.ConverterRegistryService;
 import fr.gwombat.cmstest.mapping.utils.AnnotationDetectorUtils;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.apache.commons.text.WordUtils;
@@ -24,12 +25,15 @@ import java.util.Map;
  *
  * @since 14/04/2018
  */
-public class ComplexTypeProcessor extends AbstractCmsProcessor {
+public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(ComplexTypeProcessor.class);
 
-    public ComplexTypeProcessor(CmsContextFacade cmsContextFacade) {
-        super(cmsContextFacade);
+    private final ConverterRegistryService converterRegistryService;
+
+    public ComplexTypeProcessor(CmsConfigurer cmsConfigurer, CmsResultProcessingChain cmsResultProcessingChain, ConverterRegistryService converterRegistryService) {
+        super(cmsConfigurer, cmsResultProcessingChain);
+        this.converterRegistryService = converterRegistryService;
     }
 
     @Override
@@ -75,8 +79,8 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
                     if (field.getGenericType() instanceof ParameterizedType)
                         fieldParameterizedType = (ParameterizedType) field.getGenericType();
 
-                    final String propertyPath = cmsContextFacade.getPropertyPath(rootName, propertyKey);
-                    final Object paramValue = cmsContextFacade.getProcessingChain().process(parameterType, cmsResults, fieldParameterizedType, propertyPath);
+                    final String propertyPath = getPropertyPath(rootName, propertyKey);
+                    final Object paramValue = cmsResultProcessingChain.process(parameterType, cmsResults, fieldParameterizedType, propertyPath);
 
                     logger.debug("Invoking setter {}", matchMethod);
                     matchMethod.invoke(target, paramValue);
@@ -107,7 +111,7 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
         final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
         try {
             final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
-            final Converter converter = cmsContextFacade.getConverter(converterClass);
+            final Converter converter = converterRegistryService.getConverter(converterClass);
             if (converter == null)
                 throw new CmsMappingException("Enable to find a converter of class " + converterClass);
 
@@ -125,7 +129,7 @@ public class ComplexTypeProcessor extends AbstractCmsProcessor {
         final CmsElement annotation = target.getClass().getAnnotation(CmsElement.class);
         if (annotation != null) {
             for (Class<? extends PostConverter> postConverterClass : annotation.postConverters()) {
-                final PostConverter postConverter = cmsContextFacade.getPostConverter(postConverterClass);
+                final PostConverter postConverter = converterRegistryService.getPostConverter(postConverterClass);
                 logger.debug("Invoking post-converter {}...", postConverter);
                 postConverter.postConvert(target);
             }

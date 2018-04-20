@@ -22,7 +22,7 @@ public class CallConfigurationChainImpl implements CallConfigurationChain {
                 .forEach(c -> c.configure(cmsCallWrapper, calls, context));
     }
 
-    public void addConfigurers(List<AbstractCallConfigurer> configurers) {
+    public void addConfigurers(List<AbstractCallConfigurer<?>> configurers) {
         this.configurers.addAll(configurers);
     }
 }

@@ -36,7 +36,7 @@ public class ConverterRegistryService implements ConverterRegistry {
         return null;
     }
 
-    public <T> PostConverter<T> getPostConverters(final Class<T> clazz) {
+    public <T> PostConverter<T> getPostConverter(final Class<T> clazz) {
         for (PostConverter<?> postConverter : this.postConverters) {
             if (postConverter.getClass() == clazz)
                 return (PostConverter<T>) postConverter;

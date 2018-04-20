@@ -5,9 +5,8 @@ import fr.gwombat.cmstest.core.CmsCall;
 import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
 import fr.gwombat.cmstest.core.context.LocalContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
-import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
 import fr.gwombat.cmstest.custom.jackrabbit.path.CmsPathBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
+import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
 
 import java.util.List;
 
@@ -44,8 +43,7 @@ public class DefaultNodesConfigurer extends AbstractCallConfigurer<JackrabbitCal
         }
     }
 
-    @Autowired
-    public void setCmsConfigurer(CmsConfigurer cmsConfigurer) {
+    void setCmsConfigurer(CmsConfigurer cmsConfigurer) {
         this.cmsConfigurer = cmsConfigurer;
     }
 }

@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest.mapping.processor;
 
+import fr.gwombat.cmstest.configuration.CmsConfigurer;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
-import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +10,12 @@ import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapProcessor extends AbstractCmsProcessor {
+public class MapProcessor extends AbstractChainableCmsProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapProcessor.class);
 
-    public MapProcessor(CmsContextFacade cmsContextFacade) {
-        super(cmsContextFacade);
+    public MapProcessor(CmsConfigurer cmsConfigurer, CmsResultProcessingChain cmsResultProcessingChain) {
+        super(cmsConfigurer, cmsResultProcessingChain);
     }
 
     @Override
@@ -33,8 +33,8 @@ public class MapProcessor extends AbstractCmsProcessor {
 
         LOGGER.debug("Processing map of type: {}<{},{}>", clazz, String.class, valueClass);
         for (Map.Entry<String, Map<String, String>> entry : mapItems.entrySet()) {
-            final String propertyPath = cmsContextFacade.getPropertyPath(rootName, entry.getKey());
-            final Object mapItem = cmsContextFacade.getProcessingChain().process(valueClass, cmsResults, null, propertyPath);
+            final String propertyPath = getPropertyPath(rootName, entry.getKey());
+            final Object mapItem = cmsResultProcessingChain.process(valueClass, cmsResults, null, propertyPath);
             LOGGER.debug("map item built: {}", mapItem);
             map.put(entry.getKey(), mapItem);
         }

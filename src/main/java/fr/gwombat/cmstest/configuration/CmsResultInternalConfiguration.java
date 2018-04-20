@@ -2,7 +2,6 @@ package fr.gwombat.cmstest.configuration;
 
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChainImpl;
-import fr.gwombat.cmstest.mapping.context.CmsContextFacade;
 import fr.gwombat.cmstest.mapping.processor.*;
 import fr.gwombat.cmstest.mapping.registry.CallConfigurerRegistryService;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistryService;
@@ -16,19 +15,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CmsResultInternalConfiguration {
 
-    private CmsConfigurer resultConfigurer;
+    private CmsConfigurer cmsConfigurer;
 
     @Autowired
     public void setCmsResultConfiguration(CmsConfigurer resultConfigurer) {
-        this.resultConfigurer = resultConfigurer;
+        this.cmsConfigurer = resultConfigurer;
     }
 
     @Bean
     public ConverterRegistryService converterRegistryService() {
         final ConverterRegistryService converterRegistryService = new ConverterRegistryService();
 
-        resultConfigurer.addConverters(converterRegistryService);
-        resultConfigurer.addPostConverters(converterRegistryService);
+        cmsConfigurer.addConverters(converterRegistryService);
+        cmsConfigurer.addPostConverters(converterRegistryService);
 
         return converterRegistryService;
     }
@@ -37,7 +36,7 @@ public class CmsResultInternalConfiguration {
     public TemporalRegistryService temporalRegistryService() {
         final TemporalRegistryService temporalRegistryService = new TemporalRegistryService();
 
-        resultConfigurer.addDateTimeFormatters(temporalRegistryService);
+        cmsConfigurer.addDateTimeFormatters(temporalRegistryService);
 
         return temporalRegistryService;
     }
@@ -46,19 +45,9 @@ public class CmsResultInternalConfiguration {
     public CallConfigurerRegistryService callConfigurerRegistryService() {
         final CallConfigurerRegistryService callConfigurerRegistryService = new CallConfigurerRegistryService();
 
-        resultConfigurer.addCallConfigurers(callConfigurerRegistryService);
+        cmsConfigurer.addCallConfigurers(callConfigurerRegistryService);
 
         return callConfigurerRegistryService;
-    }
-
-    @Bean
-    public CmsContextFacade cmsResultContext() {
-        CmsContextFacade cmsContextFacade = new CmsContextFacade(resultConfigurer,
-                converterRegistryService(),
-                temporalRegistryService());
-        cmsContextFacade.setProcessingChain(cmsResultProcessingChain(cmsContextFacade));
-        cmsContextFacade.setCallConfigurationChain(callConfigurationChain(callConfigurerRegistryService()));
-        return cmsContextFacade;
     }
 
     @Bean
@@ -67,13 +56,13 @@ public class CmsResultInternalConfiguration {
     }
 
     @Bean
-    public CmsResultProcessingChain cmsResultProcessingChain(final CmsContextFacade cmsResultContext) {
+    public CmsResultProcessingChain cmsResultProcessingChain() {
         final CmsResultProcessingChainImpl cmsResultProcessingChain = new CmsResultProcessingChainImpl();
         cmsResultProcessingChain.addProcessor(new SimpleTypeProcessor());
-        cmsResultProcessingChain.addProcessor(new TemporalProcessor(cmsResultContext));
-        cmsResultProcessingChain.addProcessor(new CollectionProcessor(cmsResultContext));
-        cmsResultProcessingChain.addProcessor(new MapProcessor(cmsResultContext));
-        cmsResultProcessingChain.addProcessor(new ComplexTypeProcessor(cmsResultContext));
+        cmsResultProcessingChain.addProcessor(new TemporalProcessor(cmsConfigurer, temporalRegistryService()));
+        cmsResultProcessingChain.addProcessor(new CollectionProcessor(cmsConfigurer, cmsResultProcessingChain));
+        cmsResultProcessingChain.addProcessor(new MapProcessor(cmsConfigurer, cmsResultProcessingChain));
+        cmsResultProcessingChain.addProcessor(new ComplexTypeProcessor(cmsConfigurer, cmsResultProcessingChain, converterRegistryService()));
 
         return cmsResultProcessingChain;
     }
