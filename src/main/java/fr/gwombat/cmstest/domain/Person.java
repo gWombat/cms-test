@@ -14,7 +14,7 @@ import java.util.Map;
 // 1. with wrapper:
 //@CmsElement(postConverters = PersonPostConverter.class)
 // 2. without wrapper:
-@CmsElement(nodeName = "my-page/person")
+@CmsElement(nodeName = "my-page/person", postConverters = PersonPostConverter.class)
 public class Person {
 
     @CmsProperty(name = "nom")

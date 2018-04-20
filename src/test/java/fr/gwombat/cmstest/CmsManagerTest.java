@@ -99,7 +99,7 @@ public class CmsManagerTest {
         assertEquals("fr/my-site-specific/my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(5)).getFullCmsPath());
     }
 
-    //@Test
+    @Test
     public void test_simple_object() {
         final Map<String, String> results = new HashMap<>(0);
         results.put("fr/my-site/myId", "1000");
@@ -110,7 +110,7 @@ public class CmsManagerTest {
         assertEquals(new Integer(1000), intTest);
     }
 
-    //@Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void test_simple_object_without_propertyName_should_fail() {
         final Map<String, String> results = new HashMap<>(0);
         results.put("fr/my-site/myId", "1000");
@@ -168,7 +168,7 @@ public class CmsManagerTest {
         return results;
     }
 
-    //@Test
+    @Test
     public void test_complex_object() {
         final Map<String, String> results = initResults();
         given(cmsService.getCmsResults()).willReturn(results);
@@ -212,7 +212,7 @@ public class CmsManagerTest {
         logger.info("{}", personResult);
     }
 
-    //@Test
+    @Test
     public void test_inheritance() {
         final Map<String, String> results = initResults();
         results.put("fr/my-site/my-page/person/customProperty", "test");
