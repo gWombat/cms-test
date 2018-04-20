@@ -1,6 +1,7 @@
 package fr.gwombat.cmstest;
 
 import fr.gwombat.cmstest.core.CmsCall;
+import fr.gwombat.cmstest.core.CmsCallBuilder;
 import fr.gwombat.cmstest.core.CmsCallWrapper;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallWrapper;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,16 +47,19 @@ public class CmsManagerTest {
     @Autowired
     private CmsManager cmsManager;
 
-    public CmsCallWrapper myPageCmsConfiguration() {
+    private CmsCallWrapper initCmsCalls() {
         final JackrabbitCallWrapper cmsCallWrapper = new JackrabbitCallWrapper();
         cmsCallWrapper.setRootNodePath("my-page");
         cmsCallWrapper.setCallDefaultNodes(true);
+        cmsCallWrapper.setCallSpecificNodes(true);
 
-        CmsCall childCall1 = new CmsCall();
-        childCall1.setPath("person");
-        CmsCall childCall2 = new CmsCall();
-        childCall2.setPath("otherNode");
-        childCall2.setAppendCityToPath(true);
+        final CmsCall childCall1 = CmsCallBuilder.init().path("person").build();
+        final CmsCall childCall3 = CmsCallBuilder.init().path("childNode").build();
+        final CmsCall childCall2 = CmsCallBuilder.init()
+                .path("otherNode_")
+                .appendCityToPath()
+                .childCalls(Collections.singletonList(childCall3))
+                .build();
 
         cmsCallWrapper
                 .addCall(childCall1)
@@ -65,12 +70,33 @@ public class CmsManagerTest {
 
     @Test
     public void test() {
-        final CmsCallWrapper cmsCallWrapper = myPageCmsConfiguration();
-        List<CmsPath> calls = cmsManager.createCmsCallsTemporary(cmsCallWrapper, 1188L);
+        final CmsCallWrapper cmsCallWrapper = initCmsCalls();
+        final List<CmsPath> calls = cmsManager.createCmsCallsTemporary(cmsCallWrapper, 1188L);
         assertNotNull(calls);
-        assertEquals(2, calls.size());
-        assertEquals("my-page/person/", ((JackrabbitPath) calls.get(0)).getPath());
+        assertEquals(6, calls.size());
+        assertEquals("my-page/person", ((JackrabbitPath) calls.get(0)).getPath());
+        assertEquals("my-page/person", ((JackrabbitPath) calls.get(0)).getResolvedPath());
         assertEquals("fr/my-site/my-page/person", ((JackrabbitPath) calls.get(0)).getFullCmsPath());
+
+        assertEquals("my-page/otherNode_", ((JackrabbitPath) calls.get(1)).getPath());
+        assertEquals("my-page/otherNode_1188", ((JackrabbitPath) calls.get(1)).getResolvedPath());
+        assertEquals("fr/my-site/my-page/otherNode_1188", ((JackrabbitPath) calls.get(1)).getFullCmsPath());
+
+        assertEquals("my-page/otherNode_/childNode", ((JackrabbitPath) calls.get(2)).getPath());
+        assertEquals("my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(2)).getResolvedPath());
+        assertEquals("fr/my-site/my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(2)).getFullCmsPath());
+
+        assertEquals("my-page/person", ((JackrabbitPath) calls.get(3)).getPath());
+        assertEquals("my-page/person", ((JackrabbitPath) calls.get(3)).getResolvedPath());
+        assertEquals("fr/my-site-specific/my-page/person", ((JackrabbitPath) calls.get(3)).getFullCmsPath());
+
+        assertEquals("my-page/otherNode_", ((JackrabbitPath) calls.get(4)).getPath());
+        assertEquals("my-page/otherNode_1188", ((JackrabbitPath) calls.get(4)).getResolvedPath());
+        assertEquals("fr/my-site-specific/my-page/otherNode_1188", ((JackrabbitPath) calls.get(4)).getFullCmsPath());
+
+        assertEquals("my-page/otherNode_/childNode", ((JackrabbitPath) calls.get(5)).getPath());
+        assertEquals("my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(5)).getResolvedPath());
+        assertEquals("fr/my-site-specific/my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(5)).getFullCmsPath());
     }
 
     //@Test

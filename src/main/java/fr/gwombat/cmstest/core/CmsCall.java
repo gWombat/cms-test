@@ -7,15 +7,10 @@ public class CmsCall {
 
     private String        path;
     private boolean       appendCityToPath;
-    private List<CmsCall> calls;
+    private List<CmsCall> childCalls;
 
     public CmsCall() {
-        this.calls = new ArrayList<>(0);
-    }
-
-    public CmsCall addCall(CmsCall call){
-        this.calls.add(call);
-        return this;
+        this.childCalls = new ArrayList<>(0);
     }
 
     public String getPath() {
@@ -34,11 +29,11 @@ public class CmsCall {
         this.appendCityToPath = appendCityToPath;
     }
 
-    public List<CmsCall> getCalls() {
-        return calls;
+    public List<CmsCall> getChildCalls() {
+        return childCalls;
     }
 
-    public void setCalls(List<CmsCall> calls) {
-        this.calls = calls;
+    public void setChildCalls(List<CmsCall> childCalls) {
+        this.childCalls = childCalls;
     }
 }

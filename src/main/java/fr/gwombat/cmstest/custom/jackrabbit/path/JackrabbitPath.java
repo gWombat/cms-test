@@ -9,10 +9,12 @@ public class JackrabbitPath implements CmsPath {
     private final String language;
     private final String brand;
     private final String path;
+    private final String resolvedPath;
     private final String fullCmsPath;
 
-    JackrabbitPath(final CmsPathBuilder builder) {
+    JackrabbitPath(final JackrabbitPathBuilder builder) {
         this.path = builder.buildCmsPath();
+        this.resolvedPath = builder.buildResolvedPath();
         this.fullCmsPath = builder.buildFullPath();
         this.brand = builder.getBrand();
         this.language = builder.getLanguage();
@@ -40,6 +42,10 @@ public class JackrabbitPath implements CmsPath {
 
     public String getPath() {
         return path;
+    }
+
+    public String getResolvedPath() {
+        return resolvedPath;
     }
 
     @Override

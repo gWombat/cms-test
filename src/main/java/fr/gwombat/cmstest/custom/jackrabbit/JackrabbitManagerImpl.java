@@ -2,7 +2,6 @@ package fr.gwombat.cmstest.custom.jackrabbit;
 
 import fr.gwombat.cmstest.core.context.LocalContext;
 import fr.gwombat.cmstest.mapping.manager.AbstractCmsManager;
-import org.springframework.stereotype.Service;
 
 public class JackrabbitManagerImpl extends AbstractCmsManager<AbstractJackrabbitConfigurer> {
 

@@ -26,7 +26,8 @@ public class CallConfigurerRegistryService implements CallConfigurerRegistry {
 
     @Override
     public CallConfigurerRegistry addCallConfigurers(List<AbstractCallConfigurer<?>> configurers) {
-        this.configurers.addAll(configurers);
+        if(configurers != null)
+            this.configurers.addAll(configurers);
         return this;
     }
 }

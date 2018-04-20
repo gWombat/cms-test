@@ -18,8 +18,8 @@ public class CmsResultInternalConfiguration {
     private CmsConfigurer cmsConfigurer;
 
     @Autowired
-    public void setCmsResultConfiguration(CmsConfigurer resultConfigurer) {
-        this.cmsConfigurer = resultConfigurer;
+    public void setCmsConfigurer(CmsConfigurer cmsConfigurer) {
+        this.cmsConfigurer = cmsConfigurer;
     }
 
     @Bean

@@ -2,14 +2,14 @@ package fr.gwombat.cmstest.custom.jackrabbit;
 
 import fr.gwombat.cmstest.core.context.LocalContext;
 
-class JackrabbitLocalContext extends LocalContext {
+public class JackrabbitLocalContext extends LocalContext {
 
     private Long   departureCityId;
     private String language;
     private String brandNode;
     private String brandNodeSpecific;
 
-    Long getDepartureCityId() {
+    public Long getDepartureCityId() {
         return departureCityId;
     }
 
@@ -17,7 +17,7 @@ class JackrabbitLocalContext extends LocalContext {
         this.departureCityId = departureCityId;
     }
 
-    String getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
@@ -25,7 +25,7 @@ class JackrabbitLocalContext extends LocalContext {
         this.language = language;
     }
 
-    String getBrandNode() {
+    public String getBrandNode() {
         return brandNode;
     }
 
@@ -33,7 +33,7 @@ class JackrabbitLocalContext extends LocalContext {
         this.brandNode = brandNode;
     }
 
-    String getBrandNodeSpecific() {
+    public String getBrandNodeSpecific() {
         return brandNodeSpecific;
     }
 
