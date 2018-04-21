@@ -6,7 +6,6 @@ import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,19 +29,23 @@ public class CollectionProcessor extends AbstractChainableCmsProcessor {
     }
 
     @Override
-    public Object process(final Map<String, String> cmsResults, final Class<?> clazz, final ParameterizedType parameterizedType, final String rootName) throws CmsMappingException {
-        LOGGER.debug("Invoking collection processing on root node name: {}", rootName);
-        if (parameterizedType == null)
+    public Object process(final Map<String, String> cmsResults, final ResultProcessingContext context) throws CmsMappingException {
+        LOGGER.debug("Invoking collection processing on root node name: {}", context.getPath());
+        if (context.getParameterizedType() == null)
             throw new IllegalArgumentException("The type of collection must be set");
 
-        final Map<String, Map<String, String>> collectionItems = getGroupedCmsResultsSubMap(cmsResults, rootName);
+        final Map<String, Map<String, String>> collectionItems = getGroupedCmsResultsSubMap(cmsResults, context.getPath());
         final List<Object> collection = new ArrayList<>(collectionItems.size());
-        final Class<?> parameterizedTypeClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+        final Class<?> parameterizedTypeClass = (Class<?>) context.getParameterizedType().getActualTypeArguments()[0];
 
-        LOGGER.debug("Processing collection of type: {}<{}>", clazz, parameterizedTypeClass);
+        LOGGER.debug("Processing collection of type: {}<{}>", context.getObjectType(), parameterizedTypeClass);
         for (Map.Entry<String, Map<String, String>> entry : collectionItems.entrySet()) {
-            final String propertyPath = getPropertyPath(rootName, entry.getKey());
-            final Object listItem = cmsResultProcessingChain.process(parameterizedTypeClass, cmsResults, null, propertyPath);
+            final String propertyPath = getPropertyPath(context.getPath(), entry.getKey());
+            final ResultProcessingContext newContext = new ResultProcessingContext();
+            newContext.setPath(propertyPath);
+            newContext.setObjectType(parameterizedTypeClass);
+
+            final Object listItem = cmsResultProcessingChain.process(cmsResults, newContext);
             LOGGER.debug("collection item built: {}", listItem);
             collection.add(listItem);
         }

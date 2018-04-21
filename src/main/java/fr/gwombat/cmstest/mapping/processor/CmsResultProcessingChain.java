@@ -2,7 +2,6 @@ package fr.gwombat.cmstest.mapping.processor;
 
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 
 /**
@@ -12,5 +11,5 @@ import java.util.Map;
  */
 @FunctionalInterface
 public interface CmsResultProcessingChain {
-    Object process(Class<?> clazz, Map<String, String> cmsResults, ParameterizedType parameterizedType, String rootName) throws CmsMappingException;
+    Object process(final Map<String, String> cmsResults, final ResultProcessingContext context) throws CmsMappingException;
 }

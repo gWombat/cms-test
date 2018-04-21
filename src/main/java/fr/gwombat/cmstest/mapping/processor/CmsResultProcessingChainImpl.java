@@ -2,7 +2,6 @@ package fr.gwombat.cmstest.mapping.processor;
 
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,14 +20,16 @@ public class CmsResultProcessingChainImpl implements CmsResultProcessingChain {
     }
 
     @Override
-    public Object process(final Class<?> clazz, Map<String, String> cmsResults, ParameterizedType parameterizedType, final String rootName) throws CmsMappingException {
+    public Object process(final Map<String, String> cmsResults, final ResultProcessingContext context) throws CmsMappingException {
         final CmsProcessor matchingProcessor = processors
                 .stream()
-                .filter(p -> p.isExecutable(clazz))
+                .filter(p -> p.isExecutable(context.getObjectType()))
                 .findFirst()
-                .orElse((r, c, p, n) -> {throw new CmsMappingException("No processor found for type: " + c);});
+                .orElse((r, c) -> {
+                    throw new CmsMappingException("No processor found for type: " + c.getObjectType());
+                });
 
-        return matchingProcessor.process(cmsResults, clazz, parameterizedType, rootName);
+        return matchingProcessor.process(cmsResults, context);
     }
 
     public void addProcessor(CmsProcessor cmsProcessor) {

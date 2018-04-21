@@ -17,5 +17,5 @@ public interface CmsProcessor {
         return true;
     }
 
-    Object process(Map<String, String> cmsResults, Class<?> clazz, ParameterizedType parameterizedType, String rootName) throws CmsMappingException;
+    Object process(Map<String, String> cmsResults, ResultProcessingContext context) throws CmsMappingException;
 }

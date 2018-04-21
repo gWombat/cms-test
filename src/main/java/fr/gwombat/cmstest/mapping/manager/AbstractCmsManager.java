@@ -8,6 +8,7 @@ import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.exceptions.CmsRuntimeException;
 import fr.gwombat.cmstest.mapping.processor.CmsResultProcessingChain;
+import fr.gwombat.cmstest.mapping.processor.ResultProcessingContext;
 import fr.gwombat.cmstest.mapping.service.CmsService;
 import fr.gwombat.cmstest.mapping.utils.AnnotationDetectorUtils;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
@@ -66,7 +67,11 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
         final String nodeName = cmsConfigurer.getRootNodePrefix() + currentNodeName;
 
         try {
-            return (T) cmsResultProcessingChain.process(resultType, cmsResults, null, nodeName);
+            final ResultProcessingContext context = new ResultProcessingContext();
+            context.setPath(nodeName);
+            context.setObjectType(resultType);
+
+            return (T) cmsResultProcessingChain.process(cmsResults, context);
         } catch (CmsMappingException e) {
             throw new CmsRuntimeException(e);
         }

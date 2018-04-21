@@ -6,7 +6,6 @@ import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,17 +23,21 @@ public class MapProcessor extends AbstractChainableCmsProcessor {
     }
 
     @Override
-    public Object process(Map<String, String> cmsResults, Class<?> clazz, ParameterizedType parameterizedType, String rootName) throws CmsMappingException {
-        LOGGER.debug("Invoking map processing on root node name: {}", rootName);
-        final Map<String, Map<String, String>> mapItems = getGroupedCmsResultsSubMap(cmsResults, rootName);
+    public Object process(final Map<String, String> cmsResults, final ResultProcessingContext context) throws CmsMappingException {
+        LOGGER.debug("Invoking map processing on root node name: {}", context.getPath());
+        final Map<String, Map<String, String>> mapItems = getGroupedCmsResultsSubMap(cmsResults, context.getPath());
         final Map<String, Object> map = new HashMap<>(mapItems.size());
 
-        final Class<?> valueClass = (Class<?>) parameterizedType.getActualTypeArguments()[1];
+        final Class<?> valueClass = (Class<?>) context.getParameterizedType().getActualTypeArguments()[1];
 
-        LOGGER.debug("Processing map of type: {}<{},{}>", clazz, String.class, valueClass);
+        LOGGER.debug("Processing map of type: {}<{},{}>", context.getObjectType(), String.class, valueClass);
         for (Map.Entry<String, Map<String, String>> entry : mapItems.entrySet()) {
-            final String propertyPath = getPropertyPath(rootName, entry.getKey());
-            final Object mapItem = cmsResultProcessingChain.process(valueClass, cmsResults, null, propertyPath);
+            final String propertyPath = getPropertyPath(context.getPath(), entry.getKey());
+            final ResultProcessingContext newContext = new ResultProcessingContext();
+            newContext.setObjectType(valueClass);
+            newContext.setPath(propertyPath);
+
+            final Object mapItem = cmsResultProcessingChain.process(cmsResults, newContext);
             LOGGER.debug("map item built: {}", mapItem);
             map.put(entry.getKey(), mapItem);
         }
