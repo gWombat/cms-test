@@ -61,7 +61,7 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
             try {
                 currentNodeName = AnnotationDetectorUtils.detectRootNodeName(resultType);
             } catch (InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
+                throw new CmsRuntimeException(e);
             }
         }
         final String nodeName = cmsConfigurer.getRootNodePrefix() + currentNodeName;
