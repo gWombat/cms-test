@@ -1,4 +1,4 @@
-package fr.gwombat.cmstest.core;
+package fr.gwombat.cmstest.core.context;
 
 import java.util.HashMap;
 import java.util.Map;

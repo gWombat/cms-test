@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.mapping.utils;
 
-import fr.gwombat.cmstest.core.DynamicNodesContext;
+import fr.gwombat.cmstest.core.context.DynamicNodesContext;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.annotations.CmsElement;
 import fr.gwombat.cmstest.mapping.annotations.CmsNode;

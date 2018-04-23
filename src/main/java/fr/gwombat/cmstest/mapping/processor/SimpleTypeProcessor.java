@@ -1,6 +1,7 @@
 package fr.gwombat.cmstest.mapping.processor;
 
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
+import fr.gwombat.cmstest.mapping.context.ResultProcessingContext;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

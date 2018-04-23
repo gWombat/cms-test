@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest.mapping.manager;
 
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
-import fr.gwombat.cmstest.core.DynamicNodesContext;
+import fr.gwombat.cmstest.core.context.DynamicNodesContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
 
 import java.util.List;

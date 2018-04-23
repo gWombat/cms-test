@@ -3,6 +3,7 @@ package fr.gwombat.cmstest.mapping.processor;
 import fr.gwombat.cmstest.configuration.CmsConfigurer;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.annotations.CmsElement;
+import fr.gwombat.cmstest.mapping.context.ResultProcessingContext;
 import fr.gwombat.cmstest.mapping.converters.Converter;
 import fr.gwombat.cmstest.mapping.converters.DefaultConverter;
 import fr.gwombat.cmstest.mapping.converters.PostConverter;

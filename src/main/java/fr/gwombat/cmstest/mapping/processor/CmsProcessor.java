@@ -1,8 +1,8 @@
 package fr.gwombat.cmstest.mapping.processor;
 
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
+import fr.gwombat.cmstest.mapping.context.ResultProcessingContext;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 
 /**

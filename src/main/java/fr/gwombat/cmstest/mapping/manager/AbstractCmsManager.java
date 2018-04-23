@@ -2,15 +2,15 @@ package fr.gwombat.cmstest.mapping.manager;
 
 import fr.gwombat.cmstest.configuration.CmsConfigurer;
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
-import fr.gwombat.cmstest.core.DynamicNodesContext;
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
 import fr.gwombat.cmstest.core.context.ConfigurationContext;
+import fr.gwombat.cmstest.core.context.DynamicNodesContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.exceptions.CmsConfigurationException;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.exceptions.CmsRuntimeException;
+import fr.gwombat.cmstest.mapping.context.ResultProcessingContext;
 import fr.gwombat.cmstest.mapping.processor.CmsResultProcessingChain;
-import fr.gwombat.cmstest.mapping.processor.ResultProcessingContext;
 import fr.gwombat.cmstest.mapping.service.CmsService;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
 

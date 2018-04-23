@@ -3,7 +3,7 @@ package fr.gwombat.cmstest;
 import fr.gwombat.cmstest.core.CmsCallBuilder;
 import fr.gwombat.cmstest.core.CmsCallConfig;
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
-import fr.gwombat.cmstest.core.DynamicNodesContext;
+import fr.gwombat.cmstest.core.context.DynamicNodesContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallConfigWrapper;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;

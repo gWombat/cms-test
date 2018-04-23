@@ -1,6 +1,6 @@
-package fr.gwombat.cmstest.mapping.processor;
+package fr.gwombat.cmstest.mapping.context;
 
-import fr.gwombat.cmstest.core.DynamicNodesContext;
+import fr.gwombat.cmstest.core.context.DynamicNodesContext;
 
 import java.lang.reflect.ParameterizedType;
 
