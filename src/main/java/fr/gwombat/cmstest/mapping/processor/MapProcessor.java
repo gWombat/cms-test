@@ -36,6 +36,7 @@ public class MapProcessor extends AbstractChainableCmsProcessor {
             final ResultProcessingContext newContext = new ResultProcessingContext();
             newContext.setObjectType(valueClass);
             newContext.setPath(propertyPath);
+            newContext.setDynamicNodesContext(context.getDynamicNodesContext());
 
             final Object mapItem = cmsResultProcessingChain.process(cmsResults, newContext);
             LOGGER.debug("map item built: {}", mapItem);

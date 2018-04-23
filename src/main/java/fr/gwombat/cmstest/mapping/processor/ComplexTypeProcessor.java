@@ -91,6 +91,7 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
                     newContext.setObjectType(parameterType);
                     newContext.setParameterizedType(fieldParameterizedType);
                     newContext.setPath(propertyPath);
+                    newContext.setDynamicNodesContext(context.getDynamicNodesContext());
 
                     final Object paramValue = cmsResultProcessingChain.process(cmsResults, newContext);
 

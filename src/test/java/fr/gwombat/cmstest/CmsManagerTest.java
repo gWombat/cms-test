@@ -177,12 +177,6 @@ public class CmsManagerTest {
         final DynamicNodesContext dynamicNodesContext = new DynamicNodesContext();
         dynamicNodesContext.addDynamicNodeName(Person.class, "my-page/person");
 
-        // 1. test with wrapper
-        //final MyCmsPageResultWrapper wrapper = cmsManager.produceComplexObject(null, MyCmsPageResultWrapper.class, dynamicNodesContext);
-        //assertNotNull(wrapper);
-        //final Person personResult = wrapper.getPerson();
-
-        // 2. test without wrapper
         final Person personResult = cmsManager.produceComplexObject(null, Person.class, dynamicNodesContext);
 
         assertNotNull(personResult);
