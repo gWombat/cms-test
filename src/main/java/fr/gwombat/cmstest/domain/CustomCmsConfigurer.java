@@ -35,10 +35,6 @@ public class CustomCmsConfigurer extends AbstractJackrabbitConfigurer {
     @Override
     public void addConverters(ConverterRegistry converterRegistry) {
         converterRegistry.addConverter(new PhoneNumberConverter());
-    }
-
-    @Override
-    public void addPostConverters(ConverterRegistry converterRegistry) {
         converterRegistry.addPostConverter(new PersonPostConverter());
     }
 

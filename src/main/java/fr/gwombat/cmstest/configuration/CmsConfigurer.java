@@ -14,9 +14,6 @@ public interface CmsConfigurer {
     default void addConverters(ConverterRegistry converterRegistry) {
     }
 
-    default void addPostConverters(ConverterRegistry converterRegistry) {
-    }
-
     default void addDateTimeFormatters(TemporalRegistry temporalRegistry) {
 
     }

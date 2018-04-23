@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class CmsResultInternalConfiguration {
+public class CmsInternalConfiguration {
 
     private CmsConfigurer cmsConfigurer;
 
@@ -27,7 +27,6 @@ public class CmsResultInternalConfiguration {
         final ConverterRegistryService converterRegistryService = new ConverterRegistryService();
 
         cmsConfigurer.addConverters(converterRegistryService);
-        cmsConfigurer.addPostConverters(converterRegistryService);
 
         return converterRegistryService;
     }
