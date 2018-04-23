@@ -4,8 +4,9 @@ import fr.gwombat.cmstest.configuration.CmsConfigurer;
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 import fr.gwombat.cmstest.core.DynamicNodesContext;
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
-import fr.gwombat.cmstest.core.context.LocalContext;
+import fr.gwombat.cmstest.core.context.ConfigurationContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
+import fr.gwombat.cmstest.exceptions.CmsConfigurationException;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.exceptions.CmsRuntimeException;
 import fr.gwombat.cmstest.mapping.processor.CmsResultProcessingChain;
@@ -30,15 +31,19 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
     private U                        cmsConfigurer;
 
     @Override
-    public List<CmsPath> createCmsCallsTemporary(CmsCallConfigWrapper callWrapper, Long departureCityId) {
+    public List<CmsPath> createCmsCallsTemporary(CmsCallConfigWrapper callConfigWrapper, Long departureCityId) {
 
-        final LocalContext localContext = createLocalContext(cmsConfigurer, departureCityId);
+        final ConfigurationContext configurationContext = createConfigurationContext(cmsConfigurer, departureCityId);
         final List<CmsPath> calls = new ArrayList<>(0);
-        callConfigurationChain.configure(callWrapper, calls, localContext);
+        try {
+            callConfigurationChain.configure(callConfigWrapper, calls, configurationContext);
+        } catch (CmsConfigurationException e) {
+            throw new CmsRuntimeException(e);
+        }
         return calls;
     }
 
-    protected abstract LocalContext createLocalContext(U configurer, Long departureCityId);
+    protected abstract ConfigurationContext createConfigurationContext(U configurer, Long departureCityId);
 
     @Override
     public <T> T produceComplexObject(final CmsCallConfigWrapper callWrapper, final Class<T> resultType) {
@@ -50,28 +55,25 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
         if (!TypeUtils.isComplexType(resultType))
             throw new CmsRuntimeException("The expected result object must be a complex object (Not String, numbers, boolean, map, collection or temporal elements)");
 
-        return produceResultInternal(callWrapper, resultType, null, dynamicNodesContext);
+        return produceResultInternal(callWrapper, resultType, dynamicNodesContext);
     }
 
-    @Override
-    public <T> T produceSimpleObject(final Class<T> resultType, final String propertyName) {
-        if (propertyName == null || "".equals(propertyName))
-            throw new CmsRuntimeException("The propertyName parameter must be set");
+//    @Override
+//    public <T> T produceSimpleObject(final Class<T> resultType, final String propertyName) {
+//        if (propertyName == null || "".equals(propertyName))
+//            throw new CmsRuntimeException("The propertyName parameter must be set");
+//
+//        return produceResultInternal(null, resultType, propertyName, null);
+//    }
 
-        return produceResultInternal(null, resultType, propertyName, null);
-    }
-
-    private <T> T produceResultInternal(final CmsCallConfigWrapper callWrapper, final Class<T> resultType, final String propertyName, final DynamicNodesContext dynamicNodesContext) {
+    private <T> T produceResultInternal(final CmsCallConfigWrapper callConfigWrapper, final Class<T> resultType, final DynamicNodesContext dynamicNodesContext) {
         final Map<String, String> cmsResults = cmsService.getCmsResults();
 
         if (cmsResults.isEmpty())
             return null;
 
         try {
-            String nodeName = cmsConfigurer.getRootNodePrefix();
-            if (propertyName != null)
-                nodeName += propertyName;
-
+            final String nodeName = cmsConfigurer.getRootNodePrefix();
             final ResultProcessingContext context = new ResultProcessingContext();
             context.setPath(nodeName);
             context.setObjectType(resultType);

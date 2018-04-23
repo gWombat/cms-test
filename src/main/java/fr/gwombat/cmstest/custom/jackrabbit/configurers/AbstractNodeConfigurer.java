@@ -5,17 +5,21 @@ import fr.gwombat.cmstest.core.CmsCallConfig;
 import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallConfigWrapper;
-import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitLocalContext;
+import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitConfigurationContext;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPathBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public abstract class AbstractNodeConfigurer extends AbstractCallConfigurer<JackrabbitCallConfigWrapper> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNodeConfigurer.class);
+
     private CmsConfigurer cmsConfigurer;
 
-    protected void configureCallRecursive(List<CmsCallConfig> cmsCallConfigList, List<CmsPath> cmsPathList, JackrabbitLocalContext context, String rootName, final JackrabbitPathBuilder parentPathBuilder, boolean specificNode) {
+    protected void configureCallRecursive(List<CmsCallConfig> cmsCallConfigList, List<CmsPath> cmsPathList, JackrabbitConfigurationContext context, String rootName, final JackrabbitPathBuilder parentPathBuilder, boolean specificNode) {
         if (cmsCallConfigList == null || cmsCallConfigList.isEmpty())
             return;
 
@@ -27,6 +31,7 @@ public abstract class AbstractNodeConfigurer extends AbstractCallConfigurer<Jack
                     .withCityIdIfNecessary(cmsCallConfig.isAppendCityToPath(), context.getDepartureCityId());
 
             final JackrabbitPath jackrabbitPath = jackrabbitPathBuilder.build();
+            LOGGER.debug("Adding call {} to the queue", jackrabbitPath);
             cmsPathList.add(jackrabbitPath);
 
             if (cmsCallConfig.getChildCalls() != null)

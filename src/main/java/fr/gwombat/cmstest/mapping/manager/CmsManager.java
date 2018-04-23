@@ -19,7 +19,7 @@ public interface CmsManager {
 
     <T> T produceComplexObject(CmsCallConfigWrapper callWrapper, Class<T> resultType);
 
-    <T> T produceSimpleObject(Class<T> resultType, String propertyName);
+//    <T> T produceSimpleObject(Class<T> resultType, String propertyName);
 
 //    <T> List<T> produceList(Class<T> listType, String cmsPropertyName);
 //

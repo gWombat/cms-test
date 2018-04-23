@@ -1,8 +1,8 @@
 package fr.gwombat.cmstest.custom.jackrabbit;
 
-import fr.gwombat.cmstest.core.context.LocalContext;
+import fr.gwombat.cmstest.core.context.ConfigurationContext;
 
-public class JackrabbitLocalContext extends LocalContext {
+public class JackrabbitConfigurationContext extends ConfigurationContext {
 
     private Long   departureCityId;
     private String language;

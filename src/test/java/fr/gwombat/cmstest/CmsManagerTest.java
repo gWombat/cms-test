@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest;
 
-import fr.gwombat.cmstest.core.CmsCallConfig;
 import fr.gwombat.cmstest.core.CmsCallBuilder;
+import fr.gwombat.cmstest.core.CmsCallConfig;
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 import fr.gwombat.cmstest.core.DynamicNodesContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
@@ -70,46 +70,46 @@ public class CmsManagerTest {
     }
 
     @Test
-    public void test() {
+    public void test_configuration_calls() {
         final CmsCallConfigWrapper cmsCallConfigWrapper = initCmsCalls();
         final List<CmsPath> calls = cmsManager.createCmsCallsTemporary(cmsCallConfigWrapper, 1188L);
         assertNotNull(calls);
         assertEquals(6, calls.size());
-        assertEquals("my-page/person", ((JackrabbitPath) calls.get(0)).getPath());
+        assertEquals("my-page/person", (calls.get(0)).getPath());
         assertEquals("my-page/person", ((JackrabbitPath) calls.get(0)).getResolvedPath());
         assertEquals("fr/my-site/my-page/person", ((JackrabbitPath) calls.get(0)).getFullCmsPath());
 
-        assertEquals("my-page/otherNode_", ((JackrabbitPath) calls.get(1)).getPath());
+        assertEquals("my-page/otherNode_", (calls.get(1)).getPath());
         assertEquals("my-page/otherNode_1188", ((JackrabbitPath) calls.get(1)).getResolvedPath());
         assertEquals("fr/my-site/my-page/otherNode_1188", ((JackrabbitPath) calls.get(1)).getFullCmsPath());
 
-        assertEquals("my-page/otherNode_/childNode", ((JackrabbitPath) calls.get(2)).getPath());
+        assertEquals("my-page/otherNode_/childNode", (calls.get(2)).getPath());
         assertEquals("my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(2)).getResolvedPath());
         assertEquals("fr/my-site/my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(2)).getFullCmsPath());
 
-        assertEquals("my-page/person", ((JackrabbitPath) calls.get(3)).getPath());
+        assertEquals("my-page/person", (calls.get(3)).getPath());
         assertEquals("my-page/person", ((JackrabbitPath) calls.get(3)).getResolvedPath());
         assertEquals("fr/my-site-specific/my-page/person", ((JackrabbitPath) calls.get(3)).getFullCmsPath());
 
-        assertEquals("my-page/otherNode_", ((JackrabbitPath) calls.get(4)).getPath());
+        assertEquals("my-page/otherNode_", (calls.get(4)).getPath());
         assertEquals("my-page/otherNode_1188", ((JackrabbitPath) calls.get(4)).getResolvedPath());
         assertEquals("fr/my-site-specific/my-page/otherNode_1188", ((JackrabbitPath) calls.get(4)).getFullCmsPath());
 
-        assertEquals("my-page/otherNode_/childNode", ((JackrabbitPath) calls.get(5)).getPath());
+        assertEquals("my-page/otherNode_/childNode", (calls.get(5)).getPath());
         assertEquals("my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(5)).getResolvedPath());
         assertEquals("fr/my-site-specific/my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(5)).getFullCmsPath());
     }
 
-    @Test
-    public void test_simple_object() {
-        final Map<String, String> results = new HashMap<>(0);
-        results.put("fr/my-site/myId", "1000");
-        given(cmsService.getCmsResults()).willReturn(results);
-
-        final Integer intTest = cmsManager.produceSimpleObject(Integer.class, "myId");
-        assertNotNull(intTest);
-        assertEquals(new Integer(1000), intTest);
-    }
+//    @Test
+//    public void test_simple_object() {
+//        final Map<String, String> results = new HashMap<>(0);
+//        results.put("fr/my-site/myId", "1000");
+//        given(cmsService.getCmsResults()).willReturn(results);
+//
+//        final Integer intTest = cmsManager.produceSimpleObject(Integer.class, "myId");
+//        assertNotNull(intTest);
+//        assertEquals(new Integer(1000), intTest);
+//    }
 
     @Test(expected = CmsRuntimeException.class)
     public void test_simple_object_without_propertyName_should_fail() {

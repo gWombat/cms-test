@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.core.context;
 
-public class LocalContext {
+public class ConfigurationContext {
 
     private String rootNodePath;
 
