@@ -1,14 +1,15 @@
 package fr.gwombat.cmstest.mapping.utils;
 
+import fr.gwombat.cmstest.core.DynamicNodesContext;
+import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.annotations.CmsElement;
 import fr.gwombat.cmstest.mapping.annotations.CmsNode;
-import fr.gwombat.cmstest.mapping.annotations.CmsPageResult;
 import fr.gwombat.cmstest.mapping.annotations.CmsProperty;
+import fr.gwombat.cmstest.mapping.annotations.DynamicNodeName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public final class AnnotationDetectorUtils {
@@ -44,36 +45,45 @@ public final class AnnotationDetectorUtils {
         return null;
     }
 
-    public static String detectRootNodeName(final Class<?> clazz) throws InvocationTargetException, IllegalAccessException {
-        LOGGER.debug("Looking for annotation {} in {} hierarchy...", CmsPageResult.class, clazz);
-        final CmsPageResult annotationCmsPageResult = findCmsPageResultAnnotationRecursively(clazz);
-        if (annotationCmsPageResult != null && !annotationCmsPageResult.rootNode().equals(EMPTY_STRING))
-            return annotationCmsPageResult.rootNode();
+    public static String detectRootNodeName(final Class<?> clazz, DynamicNodesContext dynamicNodesContext) throws CmsMappingException {
+        String rootNodeName = detectRootNodeNameInHierarchy(clazz, dynamicNodesContext);
+        if (rootNodeName != null) {
+            LOGGER.debug("Custom node name found for clazz {}! Root node name={}", clazz, rootNodeName);
+            return rootNodeName;
+        }
 
-        LOGGER.debug("Looking for annotation {} in {} hierarchy...", CmsElement.class, clazz);
-        final CmsElement annotationCmsElement = findCmsElementAnnotationRecursively(clazz);
-        if (annotationCmsElement != null && !annotationCmsElement.nodeName().equals(EMPTY_STRING))
-            return annotationCmsElement.nodeName();
-
-        return toCamelCase(clazz.getSimpleName());
+        rootNodeName = toCamelCase(clazz.getSimpleName());
+        LOGGER.debug("No custom node name found for class {}, applying default configuration. Root node name={}", clazz, rootNodeName);
+        return rootNodeName;
     }
 
-    private static CmsElement findCmsElementAnnotationRecursively(final Class<?> clazz) {
+    private static String detectRootNodeNameInHierarchy(final Class<?> clazz, DynamicNodesContext dynamicNodesContext) throws CmsMappingException {
         if (clazz == Object.class)
             return null;
+
+        LOGGER.debug("Detecting root node name on clazz {}...", clazz);
+        final String dynamicNodeName = detectDynamicNodeName(clazz, dynamicNodesContext);
+        if (dynamicNodeName != null)
+            return dynamicNodeName;
+
         LOGGER.debug("Looking for annotation {} in class {}", CmsElement.class, clazz);
-        if (clazz.getAnnotation(CmsElement.class) != null)
-            return clazz.getAnnotation(CmsElement.class);
-        return findCmsElementAnnotationRecursively(clazz.getSuperclass());
+        if (clazz.getAnnotation(CmsElement.class) != null && !clazz.getAnnotation(CmsElement.class).nodeName().equals(EMPTY_STRING))
+            return clazz.getAnnotation(CmsElement.class).nodeName();
+
+        return detectRootNodeNameInHierarchy(clazz.getSuperclass(), dynamicNodesContext);
     }
 
-    private static CmsPageResult findCmsPageResultAnnotationRecursively(final Class<?> clazz) {
-        if (clazz == Object.class)
-            return null;
-        LOGGER.debug("Looking for annotation {} in class {}", CmsPageResult.class, clazz);
-        if (clazz.getAnnotation(CmsPageResult.class) != null)
-            return clazz.getAnnotation(CmsPageResult.class);
-        return findCmsPageResultAnnotationRecursively(clazz.getSuperclass());
+    private static String detectDynamicNodeName(final Class<?> clazz, DynamicNodesContext dynamicNodesContext) throws CmsMappingException {
+        LOGGER.debug("Looking for annotation {} in class {}", DynamicNodeName.class, clazz);
+        if (clazz.getAnnotation(DynamicNodeName.class) != null) {
+            if (dynamicNodesContext == null)
+                throw new CmsMappingException("The class " + clazz + " is annotated with @" + DynamicNodeName.class.getSimpleName() + " but no class " + DynamicNodesContext.class.getName() + " is provided to find dynamic value. Please add context.");
+            final DynamicNodeName dynamicNodeNameAnnotation = clazz.getAnnotation(DynamicNodeName.class);
+            if (!EMPTY_STRING.equals(dynamicNodeNameAnnotation.key()))
+                return dynamicNodesContext.getDynamicNodeName(dynamicNodeNameAnnotation.key());
+            return dynamicNodesContext.getDynamicNodeName(clazz);
+        }
+        return null;
     }
 
     private static String toCamelCase(String value) {

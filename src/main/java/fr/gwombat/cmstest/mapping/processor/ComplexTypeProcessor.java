@@ -45,6 +45,9 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
     public Object process(final Map<String, String> cmsResults, final ResultProcessingContext context) throws CmsMappingException {
         Object target;
 
+        final String targetNodeName = AnnotationDetectorUtils.detectRootNodeName(context.getObjectType(), context.getDynamicNodesContext());
+        logger.debug("Local context: {}", context);
+
         if (isCustomConverterAvailable(context.getObjectType()))
             return applyCustomConverter(context.getObjectType(), cmsResults, context.getPath());
 
@@ -74,12 +77,16 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
                         propertyKey = candidatePropertyName;
 
                     final Class<?> parameterType = matchMethod.getParameterTypes()[0];
+                    final boolean isParameterComplex = TypeUtils.isComplexType(parameterType);
 
                     ParameterizedType fieldParameterizedType = null;
                     if (field.getGenericType() instanceof ParameterizedType)
                         fieldParameterizedType = (ParameterizedType) field.getGenericType();
 
-                    final String propertyPath = getPropertyPath(context.getPath(), propertyKey);
+                    String propertyPath = getPropertyPath(context.getPath(), targetNodeName);
+                    if(!isParameterComplex)
+                        propertyPath = getPropertyPath(propertyPath, propertyKey);
+
                     final ResultProcessingContext newContext = new ResultProcessingContext();
                     newContext.setObjectType(parameterType);
                     newContext.setParameterizedType(fieldParameterizedType);
@@ -112,7 +119,7 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
     }
 
     private Object applyCustomConverter(final Class<?> clazz, final Map<String, String> cmsResults, final String rootName) throws CmsMappingException {
-        Object target = null;
+        Object target;
         final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
 
         final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();

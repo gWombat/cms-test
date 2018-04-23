@@ -2,6 +2,7 @@ package fr.gwombat.cmstest.domain;
 
 import fr.gwombat.cmstest.mapping.annotations.CmsElement;
 import fr.gwombat.cmstest.mapping.annotations.CmsProperty;
+import fr.gwombat.cmstest.mapping.annotations.DynamicNodeName;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import java.util.Map;
 //@CmsElement(postConverters = PersonPostConverter.class)
 // 2. without wrapper:
 @CmsElement(nodeName = "my-page/person", postConverters = PersonPostConverter.class)
+// 3. Dynamic node name:
+@DynamicNodeName
 public class Person {
 
     @CmsProperty(name = "nom")

@@ -3,14 +3,13 @@ package fr.gwombat.cmstest.mapping.annotations;
 import java.lang.annotation.*;
 
 /**
- * Created by guillaume.
- *
- * @since 14/04/2018
+ * Annotation marqueur. Non obligatoire!
  */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CmsPageResult {
+public @interface DynamicNodeName {
 
-    String rootNode() default "";
+    String key() default "";
+
 }

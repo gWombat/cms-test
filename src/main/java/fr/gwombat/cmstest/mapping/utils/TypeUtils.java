@@ -39,6 +39,26 @@ public final class TypeUtils {
         return Map.class.isAssignableFrom(parameterType);
     }
 
+    public static boolean isPrimitive(final Class<?> parameterType) {
+        if (parameterType == byte.class)
+            return true;
+        if (parameterType == float.class)
+            return true;
+        if (parameterType == int.class)
+            return true;
+        if (parameterType == double.class)
+            return true;
+        if (parameterType == long.class)
+            return true;
+        if (parameterType == boolean.class)
+            return true;
+        if (parameterType == short.class)
+            return true;
+        if (parameterType == char.class)
+            return true;
+        return false;
+    }
+
     public static boolean isSimpleType(final Class<?> parameterType) {
         if (parameterType == Byte.class || parameterType == byte.class)
             return true;

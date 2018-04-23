@@ -1,5 +1,7 @@
 package fr.gwombat.cmstest.mapping.processor;
 
+import fr.gwombat.cmstest.core.DynamicNodesContext;
+
 import java.lang.reflect.ParameterizedType;
 
 /**
@@ -9,9 +11,10 @@ import java.lang.reflect.ParameterizedType;
  */
 public class ResultProcessingContext {
 
-    private Class<?>          objectType;
-    private ParameterizedType parameterizedType;
-    private String            path;
+    private Class<?>            objectType;
+    private ParameterizedType   parameterizedType;
+    private String              path;
+    private DynamicNodesContext dynamicNodesContext;
 
     public Class<?> getObjectType() {
         return objectType;
@@ -35,5 +38,22 @@ public class ResultProcessingContext {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public DynamicNodesContext getDynamicNodesContext() {
+        return dynamicNodesContext;
+    }
+
+    public void setDynamicNodesContext(DynamicNodesContext dynamicNodesContext) {
+        this.dynamicNodesContext = dynamicNodesContext;
+    }
+
+    @Override
+    public String toString() {
+        return "ResultProcessingContext{" +
+                "objectType=" + objectType +
+                ", parameterizedType=" + parameterizedType +
+                ", path='" + path + '\'' +
+                '}';
     }
 }

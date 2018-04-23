@@ -3,13 +3,14 @@ package fr.gwombat.cmstest;
 import fr.gwombat.cmstest.core.CmsCall;
 import fr.gwombat.cmstest.core.CmsCallBuilder;
 import fr.gwombat.cmstest.core.CmsCallWrapper;
+import fr.gwombat.cmstest.core.DynamicNodesContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallWrapper;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
 import fr.gwombat.cmstest.domain.ExtendedPerson;
 import fr.gwombat.cmstest.domain.Gender;
-import fr.gwombat.cmstest.domain.MyCmsPageResultWrapper;
 import fr.gwombat.cmstest.domain.Person;
+import fr.gwombat.cmstest.exceptions.CmsRuntimeException;
 import fr.gwombat.cmstest.mapping.manager.CmsManager;
 import fr.gwombat.cmstest.mapping.service.CmsService;
 import org.junit.Test;
@@ -110,13 +111,13 @@ public class CmsManagerTest {
         assertEquals(new Integer(1000), intTest);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = CmsRuntimeException.class)
     public void test_simple_object_without_propertyName_should_fail() {
         final Map<String, String> results = new HashMap<>(0);
         results.put("fr/my-site/myId", "1000");
         given(cmsService.getCmsResults()).willReturn(results);
 
-        cmsManager.produceComplexObject(Integer.class);
+        cmsManager.produceComplexObject(null, Integer.class);
     }
 
 //    @Test
@@ -173,13 +174,16 @@ public class CmsManagerTest {
         final Map<String, String> results = initResults();
         given(cmsService.getCmsResults()).willReturn(results);
 
+        final DynamicNodesContext dynamicNodesContext = new DynamicNodesContext();
+        dynamicNodesContext.addDynamicNodeName(Person.class, "my-page/person");
+
         // 1. test with wrapper
-        final MyCmsPageResultWrapper wrapper = cmsManager.produceComplexObject(MyCmsPageResultWrapper.class);
-        assertNotNull(wrapper);
-        final Person personResult = wrapper.getPerson();
+        //final MyCmsPageResultWrapper wrapper = cmsManager.produceComplexObject(null, MyCmsPageResultWrapper.class, dynamicNodesContext);
+        //assertNotNull(wrapper);
+        //final Person personResult = wrapper.getPerson();
 
         // 2. test without wrapper
-//        final Person personResult = cmsManager.produceComplexObject(Person.class);
+        final Person personResult = cmsManager.produceComplexObject(null, Person.class, dynamicNodesContext);
 
         assertNotNull(personResult);
         assertEquals("Fabbi", personResult.getName());
@@ -219,7 +223,10 @@ public class CmsManagerTest {
         results.put("fr/my-site/my-page/person/birthDate", "01/02/1985");
         given(cmsService.getCmsResults()).willReturn(results);
 
-        final ExtendedPerson personResult = cmsManager.produceComplexObject(ExtendedPerson.class);
+        final DynamicNodesContext dynamicNodesContext = new DynamicNodesContext();
+        dynamicNodesContext.addDynamicNodeName(Person.class, "my-page/person");
+
+        final ExtendedPerson personResult = cmsManager.produceComplexObject(null, ExtendedPerson.class, dynamicNodesContext);
         assertNotNull(personResult);
         assertEquals("test", personResult.getCustomProperty());
         assertNotNull(personResult.getBirthDate());
