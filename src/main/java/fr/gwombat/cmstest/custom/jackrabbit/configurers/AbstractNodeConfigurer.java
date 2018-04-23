@@ -1,36 +1,36 @@
 package fr.gwombat.cmstest.custom.jackrabbit.configurers;
 
 import fr.gwombat.cmstest.configuration.CmsConfigurer;
-import fr.gwombat.cmstest.core.CmsCall;
+import fr.gwombat.cmstest.core.CmsCallConfig;
 import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
 import fr.gwombat.cmstest.core.path.CmsPath;
-import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallWrapper;
+import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallConfigWrapper;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitLocalContext;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPathBuilder;
 
 import java.util.List;
 
-public abstract class AbstractNodeConfigurer extends AbstractCallConfigurer<JackrabbitCallWrapper> {
+public abstract class AbstractNodeConfigurer extends AbstractCallConfigurer<JackrabbitCallConfigWrapper> {
 
     private CmsConfigurer cmsConfigurer;
 
-    protected void configureCallRecursive(List<CmsCall> cmsCallList, List<CmsPath> cmsPathList, JackrabbitLocalContext context, String rootName, final JackrabbitPathBuilder parentPathBuilder, boolean specificNode) {
-        if (cmsCallList == null || cmsCallList.isEmpty())
+    protected void configureCallRecursive(List<CmsCallConfig> cmsCallConfigList, List<CmsPath> cmsPathList, JackrabbitLocalContext context, String rootName, final JackrabbitPathBuilder parentPathBuilder, boolean specificNode) {
+        if (cmsCallConfigList == null || cmsCallConfigList.isEmpty())
             return;
 
-        for (CmsCall cmsCall : cmsCallList) {
+        for (CmsCallConfig cmsCallConfig : cmsCallConfigList) {
             final JackrabbitPathBuilder jackrabbitPathBuilder = internalInitPathBuilder(rootName, parentPathBuilder)
                     .brand(specificNode ? context.getBrandNodeSpecific() : context.getBrandNode())
                     .language(context.getLanguage())
-                    .addPath(cmsCall.getPath())
-                    .withCityIdIfNecessary(cmsCall.isAppendCityToPath(), context.getDepartureCityId());
+                    .addPath(cmsCallConfig.getPath())
+                    .withCityIdIfNecessary(cmsCallConfig.isAppendCityToPath(), context.getDepartureCityId());
 
             final JackrabbitPath jackrabbitPath = jackrabbitPathBuilder.build();
             cmsPathList.add(jackrabbitPath);
 
-            if (cmsCall.getChildCalls() != null)
-                configureCallRecursive(cmsCall.getChildCalls(), cmsPathList, context, null, jackrabbitPathBuilder, specificNode);
+            if (cmsCallConfig.getChildCalls() != null)
+                configureCallRecursive(cmsCallConfig.getChildCalls(), cmsPathList, context, null, jackrabbitPathBuilder, specificNode);
         }
     }
 

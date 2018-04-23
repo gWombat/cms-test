@@ -3,26 +3,26 @@ package fr.gwombat.cmstest.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CmsCallWrapper {
+public class CmsCallConfigWrapper {
 
-    private String        rootNodePath;
-    private List<CmsCall> calls;
+    private String              rootNodePath;
+    private List<CmsCallConfig> calls;
 
-    public CmsCallWrapper() {
+    public CmsCallConfigWrapper() {
         calls = new ArrayList<>(0);
     }
 
-    public CmsCallWrapper addCall(CmsCall cmsCall) {
-        if (cmsCall != null)
-            calls.add(cmsCall);
+    public CmsCallConfigWrapper addCall(CmsCallConfig cmsCallConfig) {
+        if (cmsCallConfig != null)
+            calls.add(cmsCallConfig);
         return this;
     }
 
-    public List<CmsCall> getCalls() {
+    public List<CmsCallConfig> getCalls() {
         return calls;
     }
 
-    public void setCalls(List<CmsCall> calls) {
+    public void setCalls(List<CmsCallConfig> calls) {
         this.calls = calls;
     }
 

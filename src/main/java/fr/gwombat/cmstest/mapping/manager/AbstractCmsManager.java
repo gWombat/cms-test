@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest.mapping.manager;
 
 import fr.gwombat.cmstest.configuration.CmsConfigurer;
-import fr.gwombat.cmstest.core.CmsCallWrapper;
+import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 import fr.gwombat.cmstest.core.DynamicNodesContext;
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
 import fr.gwombat.cmstest.core.context.LocalContext;
@@ -30,7 +30,7 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
     private U                        cmsConfigurer;
 
     @Override
-    public List<CmsPath> createCmsCallsTemporary(CmsCallWrapper callWrapper, Long departureCityId) {
+    public List<CmsPath> createCmsCallsTemporary(CmsCallConfigWrapper callWrapper, Long departureCityId) {
 
         final LocalContext localContext = createLocalContext(cmsConfigurer, departureCityId);
         final List<CmsPath> calls = new ArrayList<>(0);
@@ -41,12 +41,12 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
     protected abstract LocalContext createLocalContext(U configurer, Long departureCityId);
 
     @Override
-    public <T> T produceComplexObject(final CmsCallWrapper callWrapper, final Class<T> resultType) {
+    public <T> T produceComplexObject(final CmsCallConfigWrapper callWrapper, final Class<T> resultType) {
         return produceComplexObject(callWrapper, resultType, null);
     }
 
     @Override
-    public <T> T produceComplexObject(final CmsCallWrapper callWrapper, final Class<T> resultType, final DynamicNodesContext dynamicNodesContext) {
+    public <T> T produceComplexObject(final CmsCallConfigWrapper callWrapper, final Class<T> resultType, final DynamicNodesContext dynamicNodesContext) {
         if (!TypeUtils.isComplexType(resultType))
             throw new CmsRuntimeException("The expected result object must be a complex object (Not String, numbers, boolean, map, collection or temporal elements)");
 
@@ -61,7 +61,7 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
         return produceResultInternal(null, resultType, propertyName, null);
     }
 
-    private <T> T produceResultInternal(final CmsCallWrapper callWrapper, final Class<T> resultType, final String propertyName, final DynamicNodesContext dynamicNodesContext) {
+    private <T> T produceResultInternal(final CmsCallConfigWrapper callWrapper, final Class<T> resultType, final String propertyName, final DynamicNodesContext dynamicNodesContext) {
         final Map<String, String> cmsResults = cmsService.getCmsResults();
 
         if (cmsResults.isEmpty())

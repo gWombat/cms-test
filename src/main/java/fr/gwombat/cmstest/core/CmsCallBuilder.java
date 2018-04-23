@@ -4,9 +4,9 @@ import java.util.List;
 
 public final class CmsCallBuilder {
 
-    private String        path;
-    private boolean       appendCityToPath;
-    private List<CmsCall> childCalls;
+    private String              path;
+    private boolean             appendCityToPath;
+    private List<CmsCallConfig> childCalls;
 
     private CmsCallBuilder() {
     }
@@ -29,18 +29,18 @@ public final class CmsCallBuilder {
         return this;
     }
 
-    public CmsCallBuilder childCalls(final List<CmsCall> childCalls) {
+    public CmsCallBuilder childCalls(final List<CmsCallConfig> childCalls) {
         this.childCalls = childCalls;
         return this;
     }
 
-    public CmsCall build() {
-        final CmsCall cmsCall = new CmsCall();
-        cmsCall.setPath(this.path);
-        cmsCall.setAppendCityToPath(this.appendCityToPath);
-        cmsCall.setChildCalls(this.childCalls);
+    public CmsCallConfig build() {
+        final CmsCallConfig cmsCallConfig = new CmsCallConfig();
+        cmsCallConfig.setPath(this.path);
+        cmsCallConfig.setAppendCityToPath(this.appendCityToPath);
+        cmsCallConfig.setChildCalls(this.childCalls);
 
-        return cmsCall;
+        return cmsCallConfig;
     }
 
 }

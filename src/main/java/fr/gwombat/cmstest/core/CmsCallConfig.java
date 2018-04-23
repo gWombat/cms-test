@@ -3,13 +3,13 @@ package fr.gwombat.cmstest.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CmsCall {
+public class CmsCallConfig {
 
-    private String        path;
-    private boolean       appendCityToPath;
-    private List<CmsCall> childCalls;
+    private String              path;
+    private boolean             appendCityToPath;
+    private List<CmsCallConfig> childCalls;
 
-    public CmsCall() {
+    public CmsCallConfig() {
         this.childCalls = new ArrayList<>(0);
     }
 
@@ -29,11 +29,11 @@ public class CmsCall {
         this.appendCityToPath = appendCityToPath;
     }
 
-    public List<CmsCall> getChildCalls() {
+    public List<CmsCallConfig> getChildCalls() {
         return childCalls;
     }
 
-    public void setChildCalls(List<CmsCall> childCalls) {
+    public void setChildCalls(List<CmsCallConfig> childCalls) {
         this.childCalls = childCalls;
     }
 }

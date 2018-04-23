@@ -1,11 +1,11 @@
 package fr.gwombat.cmstest;
 
-import fr.gwombat.cmstest.core.CmsCall;
+import fr.gwombat.cmstest.core.CmsCallConfig;
 import fr.gwombat.cmstest.core.CmsCallBuilder;
-import fr.gwombat.cmstest.core.CmsCallWrapper;
+import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 import fr.gwombat.cmstest.core.DynamicNodesContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
-import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallWrapper;
+import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallConfigWrapper;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
 import fr.gwombat.cmstest.domain.ExtendedPerson;
 import fr.gwombat.cmstest.domain.Gender;
@@ -48,15 +48,15 @@ public class CmsManagerTest {
     @Autowired
     private CmsManager cmsManager;
 
-    private CmsCallWrapper initCmsCalls() {
-        final JackrabbitCallWrapper cmsCallWrapper = new JackrabbitCallWrapper();
+    private CmsCallConfigWrapper initCmsCalls() {
+        final JackrabbitCallConfigWrapper cmsCallWrapper = new JackrabbitCallConfigWrapper();
         cmsCallWrapper.setRootNodePath("my-page");
         cmsCallWrapper.setCallDefaultNodes(true);
         cmsCallWrapper.setCallSpecificNodes(true);
 
-        final CmsCall childCall1 = CmsCallBuilder.init().path("person").build();
-        final CmsCall childCall3 = CmsCallBuilder.init().path("childNode").build();
-        final CmsCall childCall2 = CmsCallBuilder.init()
+        final CmsCallConfig childCall1 = CmsCallBuilder.init().path("person").build();
+        final CmsCallConfig childCall3 = CmsCallBuilder.init().path("childNode").build();
+        final CmsCallConfig childCall2 = CmsCallBuilder.init()
                 .path("otherNode_")
                 .appendCityToPath()
                 .childCalls(Collections.singletonList(childCall3))
@@ -71,8 +71,8 @@ public class CmsManagerTest {
 
     @Test
     public void test() {
-        final CmsCallWrapper cmsCallWrapper = initCmsCalls();
-        final List<CmsPath> calls = cmsManager.createCmsCallsTemporary(cmsCallWrapper, 1188L);
+        final CmsCallConfigWrapper cmsCallConfigWrapper = initCmsCalls();
+        final List<CmsPath> calls = cmsManager.createCmsCallsTemporary(cmsCallConfigWrapper, 1188L);
         assertNotNull(calls);
         assertEquals(6, calls.size());
         assertEquals("my-page/person", ((JackrabbitPath) calls.get(0)).getPath());

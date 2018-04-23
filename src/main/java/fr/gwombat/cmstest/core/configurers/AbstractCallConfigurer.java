@@ -1,12 +1,12 @@
 package fr.gwombat.cmstest.core.configurers;
 
-import fr.gwombat.cmstest.core.CmsCallWrapper;
+import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 import fr.gwombat.cmstest.core.context.LocalContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
 
 import java.util.List;
 
-public abstract class AbstractCallConfigurer<T extends CmsCallWrapper> {
+public abstract class AbstractCallConfigurer<T extends CmsCallConfigWrapper> {
 
     protected abstract boolean isExecutable(T cmsCallWrapper);
 

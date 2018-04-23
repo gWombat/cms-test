@@ -12,12 +12,10 @@ import java.util.Map;
  *
  * @since 14/04/2018
  */
-// 1. with wrapper:
-//@CmsElement(postConverters = PersonPostConverter.class)
-// 2. without wrapper:
-@CmsElement(nodeName = "my-page/person", postConverters = PersonPostConverter.class)
-// 3. Dynamic node name:
+//@CmsElement(nodeName = "my-page/person", postConverters = PersonPostConverter.class)
+// Dynamic node name:
 @DynamicNodeName
+@CmsElement(postConverters = PersonPostConverter.class)
 public class Person {
 
     @CmsProperty(name = "nom")

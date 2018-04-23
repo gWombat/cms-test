@@ -40,6 +40,7 @@ public class JackrabbitPath implements CmsPath {
         return brand;
     }
 
+    @Override
     public String getPath() {
         return path;
     }

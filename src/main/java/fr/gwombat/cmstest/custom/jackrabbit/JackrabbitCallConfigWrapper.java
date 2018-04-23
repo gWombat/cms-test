@@ -1,8 +1,8 @@
 package fr.gwombat.cmstest.custom.jackrabbit;
 
-import fr.gwombat.cmstest.core.CmsCallWrapper;
+import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 
-public class JackrabbitCallWrapper extends CmsCallWrapper {
+public class JackrabbitCallConfigWrapper extends CmsCallConfigWrapper {
 
     private boolean callSpecificNodes;
     private boolean callDefaultNodes;
