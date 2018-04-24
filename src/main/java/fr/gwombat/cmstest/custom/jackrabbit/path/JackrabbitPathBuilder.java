@@ -102,13 +102,17 @@ public final class JackrabbitPathBuilder {
         return resolveDynamicVariables(path, true);
     }
 
+    /*
+     * based on https://stackoverflow.com/a/959776/5695673
+     * no 3rd party library (e.g. apache StrSubstitutor)...
+     */
     private String resolveDynamicVariables(String path, boolean hideVariables) {
         final Pattern pattern = Pattern.compile("\\$?\\{(.+?)}");
         final Matcher matcher = pattern.matcher(path);
         final StringBuilder builder = new StringBuilder();
         int i = 0;
         while (matcher.find()) {
-            String replacement = null;
+            String replacement;
             if (hideVariables)
                 replacement = "";
             else

@@ -14,7 +14,7 @@ public abstract class AbstractChainableCmsProcessor extends AbstractCmsProcessor
     protected final String getPropertyPath(final String rootPath, final String propertyName) {
         final StringBuilder stringBuilder = new StringBuilder(rootPath);
 
-        if (!rootPath.endsWith(cmsConfigurer.getPropertySeparator()))
+        if (!rootPath.endsWith(cmsConfigurer.getPropertySeparator()) && propertyName != null && !"".equals(propertyName))
             stringBuilder.append(cmsConfigurer.getPropertySeparator());
         stringBuilder.append(propertyName);
 
