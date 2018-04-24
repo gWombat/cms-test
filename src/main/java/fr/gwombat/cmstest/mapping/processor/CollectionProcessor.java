@@ -45,7 +45,7 @@ public class CollectionProcessor extends AbstractChainableCmsProcessor {
             final ResultProcessingContext newContext = new ResultProcessingContext();
             newContext.setPath(propertyPath);
             newContext.setObjectType(parameterizedTypeClass);
-            newContext.setDynamicNodesContext(context.getDynamicNodesContext());
+            newContext.setDynamicContext(context.getDynamicContext());
 
             final Object listItem = cmsResultProcessingChain.process(cmsResults, newContext);
             LOGGER.debug("collection item built: {}", listItem);

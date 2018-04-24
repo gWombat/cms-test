@@ -10,7 +10,7 @@ import fr.gwombat.cmstest.mapping.converters.PostConverter;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistryService;
 import fr.gwombat.cmstest.mapping.utils.AnnotationDetectorUtils;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
-import org.apache.commons.text.WordUtils;
+import fr.gwombat.cmstest.mapping.utils.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
     public Object process(final Map<String, String> cmsResults, final ResultProcessingContext context) throws CmsMappingException {
         Object target;
 
-        final String targetNodeName = AnnotationDetectorUtils.detectRootNodeName(context.getObjectType(), context.getDynamicNodesContext());
+        final String targetNodeName = AnnotationDetectorUtils.detectRootNodeName(context.getObjectType(), context.getDynamicContext());
         logger.debug("Local context: {}", context);
 
         if (isCustomConverterAvailable(context.getObjectType()))
@@ -97,7 +97,7 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
                     newContext.setParameterizedType(fieldParameterizedType);
                     newContext.setPath(propertyPath);
                     newContext.setDateTimeFormatter(dateTimeFormatter);
-                    newContext.setDynamicNodesContext(context.getDynamicNodesContext());
+                    newContext.setDynamicContext(context.getDynamicContext());
 
                     final Object paramValue = cmsResultProcessingChain.process(cmsResults, newContext);
 

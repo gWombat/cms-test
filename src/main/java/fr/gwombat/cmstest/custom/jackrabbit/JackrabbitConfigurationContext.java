@@ -4,18 +4,9 @@ import fr.gwombat.cmstest.core.context.ConfigurationContext;
 
 public class JackrabbitConfigurationContext extends ConfigurationContext {
 
-    private Long   departureCityId;
     private String language;
     private String brandNode;
     private String brandNodeSpecific;
-
-    public Long getDepartureCityId() {
-        return departureCityId;
-    }
-
-    void setDepartureCityId(Long departureCityId) {
-        this.departureCityId = departureCityId;
-    }
 
     public String getLanguage() {
         return language;

@@ -28,7 +28,7 @@ public abstract class AbstractNodeConfigurer extends AbstractCallConfigurer<Jack
                     .brand(specificNode ? context.getBrandNodeSpecific() : context.getBrandNode())
                     .language(context.getLanguage())
                     .addPath(cmsCallConfig.getPath())
-                    .withCityIdIfNecessary(cmsCallConfig.isAppendCityToPath(), context.getDepartureCityId());
+                    .dynamicVariables(context.getDynamicContext().getDynamicPathVariables());
 
             final JackrabbitPath jackrabbitPath = jackrabbitPathBuilder.build();
             LOGGER.debug("Adding call {} to the queue", jackrabbitPath);

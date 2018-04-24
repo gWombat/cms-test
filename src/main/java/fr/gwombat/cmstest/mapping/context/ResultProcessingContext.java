@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.mapping.context;
 
-import fr.gwombat.cmstest.core.context.DynamicNodesContext;
+import fr.gwombat.cmstest.core.context.DynamicContext;
 
 import java.lang.reflect.ParameterizedType;
 import java.time.format.DateTimeFormatter;
@@ -12,11 +12,11 @@ import java.time.format.DateTimeFormatter;
  */
 public class ResultProcessingContext {
 
-    private Class<?>            objectType;
-    private ParameterizedType   parameterizedType;
-    private DateTimeFormatter   dateTimeFormatter;
-    private String              path;
-    private DynamicNodesContext dynamicNodesContext;
+    private Class<?>          objectType;
+    private ParameterizedType parameterizedType;
+    private DateTimeFormatter dateTimeFormatter;
+    private String            path;
+    private DynamicContext    dynamicContext;
 
     public Class<?> getObjectType() {
         return objectType;
@@ -42,12 +42,12 @@ public class ResultProcessingContext {
         this.path = path;
     }
 
-    public DynamicNodesContext getDynamicNodesContext() {
-        return dynamicNodesContext;
+    public DynamicContext getDynamicContext() {
+        return dynamicContext;
     }
 
-    public void setDynamicNodesContext(DynamicNodesContext dynamicNodesContext) {
-        this.dynamicNodesContext = dynamicNodesContext;
+    public void setDynamicContext(DynamicContext dynamicContext) {
+        this.dynamicContext = dynamicContext;
     }
 
     public DateTimeFormatter getDateTimeFormatter() {

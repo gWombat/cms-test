@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest.mapping.manager;
 
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
-import fr.gwombat.cmstest.core.context.DynamicNodesContext;
+import fr.gwombat.cmstest.core.context.DynamicContext;
 import fr.gwombat.cmstest.core.path.CmsPath;
 
 import java.util.List;
@@ -13,9 +13,9 @@ import java.util.List;
  */
 public interface CmsManager {
 
-    List<CmsPath> createCmsCallsTemporary(CmsCallConfigWrapper callWrapper, Long departureCityId);
+    List<CmsPath> createCmsCallsTemporary(CmsCallConfigWrapper callWrapper, DynamicContext dynamicContext);
 
-    <T> T produceComplexObject(CmsCallConfigWrapper callWrapper, Class<T> resultType, DynamicNodesContext dynamicNodesContext);
+    <T> T produceComplexObject(CmsCallConfigWrapper callWrapper, Class<T> resultType, DynamicContext dynamicContext);
 
     <T> T produceComplexObject(CmsCallConfigWrapper callWrapper, Class<T> resultType);
 

@@ -1,22 +1,22 @@
 package fr.gwombat.cmstest.custom.jackrabbit.path;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class JackrabbitPathBuilder {
 
-    private static final char SPECIAL_CHARACTER = '#';
-
-    private StringBuilder pathBuilder;
-    private String        language;
-    private String        brand;
-    private String        separator;
-    private Queue<String> dynamicValues;
+    private StringBuilder       pathBuilder;
+    private String              language;
+    private String              brand;
+    private String              separator;
+    private Map<String, String> dynamicVariables;
 
     private JackrabbitPathBuilder(final String rootNode, final String separator) {
         pathBuilder = new StringBuilder();
         this.separator = separator;
-        this.dynamicValues = new LinkedList<>();
+        this.dynamicVariables = new HashMap<>(0);
         addPath(rootNode);
     }
 
@@ -29,6 +29,11 @@ public final class JackrabbitPathBuilder {
             pathBuilder.append(path);
             addTrailingSlash();
         }
+        return this;
+    }
+
+    public JackrabbitPathBuilder dynamicVariables(final Map<String, String> dynamicVariables) {
+        this.dynamicVariables = dynamicVariables;
         return this;
     }
 
@@ -47,23 +52,6 @@ public final class JackrabbitPathBuilder {
     public JackrabbitPathBuilder brand(final String brand) {
         if (brand != null && !"".equals(brand))
             this.brand = brand;
-        return this;
-    }
-
-    public JackrabbitPathBuilder withCityIdIfNecessary(boolean isNecessary, Long cityId) {
-        if (isNecessary)
-            return withCityId(cityId, "");
-        return this;
-    }
-
-    public JackrabbitPathBuilder withCityId(final Long cityId, final String separator) {
-        if (cityId != null) {
-            removeTrailingSlash();
-            pathBuilder.append(separator);
-            pathBuilder.append(SPECIAL_CHARACTER);
-            dynamicValues.add(String.valueOf(cityId));
-            addTrailingSlash();
-        }
         return this;
     }
 
@@ -97,7 +85,7 @@ public final class JackrabbitPathBuilder {
         final String path = validateAndGetPath();
         if (path.isEmpty())
             return null;
-        return resolveDynamicValues(path);
+        return resolveDynamicVariables(path, false);
     }
 
     private String validateAndGetPath() {
@@ -110,22 +98,32 @@ public final class JackrabbitPathBuilder {
         return path;
     }
 
-    private static String hideDynamicValues(final String path) {
-        return path.replaceAll(String.valueOf(SPECIAL_CHARACTER), "");
+    private String hideDynamicValues(final String path) {
+        return resolveDynamicVariables(path, true);
     }
 
-    private String resolveDynamicValues(String path) {
-        if (path == null)
-            return null;
-
-        final StringBuilder resolvedPath = new StringBuilder();
-        final Queue<String> localDynamicValues = new LinkedList<>(dynamicValues);
-        for (char c : path.toCharArray())
-            if (c == SPECIAL_CHARACTER)
-                resolvedPath.append(localDynamicValues.poll());
+    private String resolveDynamicVariables(String path, boolean hideVariables) {
+        final Pattern pattern = Pattern.compile("\\$?\\{(.+?)}");
+        final Matcher matcher = pattern.matcher(path);
+        final StringBuilder builder = new StringBuilder();
+        int i = 0;
+        while (matcher.find()) {
+            String replacement = null;
+            if (hideVariables)
+                replacement = "";
             else
-                resolvedPath.append(c);
-        return resolvedPath.toString();
+                replacement = dynamicVariables.get(matcher.group(1));
+
+            builder.append(path.substring(i, matcher.start()));
+            if (replacement == null)
+                builder.append(matcher.group(0));
+            else
+                builder.append(replacement);
+            i = matcher.end();
+        }
+        builder.append(path.substring(i, path.length()));
+        return builder.toString();
+
     }
 
     private String removeLeadingSlash(final String path) {

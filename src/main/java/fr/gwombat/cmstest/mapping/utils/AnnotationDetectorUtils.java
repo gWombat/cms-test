@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.mapping.utils;
 
-import fr.gwombat.cmstest.core.context.DynamicNodesContext;
+import fr.gwombat.cmstest.core.context.DynamicContext;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.annotations.*;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public final class AnnotationDetectorUtils {
         if (nodeAnnotation != null && !nodeAnnotation.name().equals(EMPTY_STRING))
             return nodeAnnotation.name();
 
-        return toCamelCase(field.getName());
+        return WordUtils.toCamelCase(field.getName());
     }
 
     public static String detectPropertyName(final Method method) {
@@ -61,24 +61,24 @@ public final class AnnotationDetectorUtils {
         return null;
     }
 
-    public static String detectRootNodeName(final Class<?> clazz, DynamicNodesContext dynamicNodesContext) throws CmsMappingException {
-        String rootNodeName = detectRootNodeNameInHierarchy(clazz, dynamicNodesContext);
+    public static String detectRootNodeName(final Class<?> clazz, DynamicContext dynamicContext) throws CmsMappingException {
+        String rootNodeName = detectRootNodeNameInHierarchy(clazz, dynamicContext);
         if (rootNodeName != null) {
             LOGGER.debug("Custom node name found for clazz {}! Root node name={}", clazz, rootNodeName);
             return rootNodeName;
         }
 
-        rootNodeName = toCamelCase(clazz.getSimpleName());
+        rootNodeName = WordUtils.toCamelCase(clazz.getSimpleName());
         LOGGER.debug("No custom node name found for class {}, applying default configuration. Root node name={}", clazz, rootNodeName);
         return rootNodeName;
     }
 
-    private static String detectRootNodeNameInHierarchy(final Class<?> clazz, DynamicNodesContext dynamicNodesContext) throws CmsMappingException {
+    private static String detectRootNodeNameInHierarchy(final Class<?> clazz, DynamicContext dynamicContext) throws CmsMappingException {
         if (clazz == Object.class)
             return null;
 
         LOGGER.debug("Detecting root node name on clazz {}...", clazz);
-        final String dynamicNodeName = detectDynamicNodeName(clazz, dynamicNodesContext);
+        final String dynamicNodeName = detectDynamicNodeName(clazz, dynamicContext);
         if (dynamicNodeName != null)
             return dynamicNodeName;
 
@@ -86,31 +86,19 @@ public final class AnnotationDetectorUtils {
         if (clazz.getAnnotation(CmsElement.class) != null && !clazz.getAnnotation(CmsElement.class).nodeName().equals(EMPTY_STRING))
             return clazz.getAnnotation(CmsElement.class).nodeName();
 
-        return detectRootNodeNameInHierarchy(clazz.getSuperclass(), dynamicNodesContext);
+        return detectRootNodeNameInHierarchy(clazz.getSuperclass(), dynamicContext);
     }
 
-    private static String detectDynamicNodeName(final Class<?> clazz, DynamicNodesContext dynamicNodesContext) throws CmsMappingException {
+    private static String detectDynamicNodeName(final Class<?> clazz, DynamicContext dynamicContext) throws CmsMappingException {
         LOGGER.debug("Looking for annotation {} in class {}", DynamicNodeName.class, clazz);
         if (clazz.getAnnotation(DynamicNodeName.class) != null) {
-            if (dynamicNodesContext == null)
-                throw new CmsMappingException("The class " + clazz + " is annotated with @" + DynamicNodeName.class.getSimpleName() + " but no class " + DynamicNodesContext.class.getName() + " is provided to find dynamic value. Please add context.");
+            if (dynamicContext == null)
+                throw new CmsMappingException("The class " + clazz + " is annotated with @" + DynamicNodeName.class.getSimpleName() + " but no class " + DynamicContext.class.getName() + " is provided to find dynamic value. Please add context.");
             final DynamicNodeName dynamicNodeNameAnnotation = clazz.getAnnotation(DynamicNodeName.class);
             if (!EMPTY_STRING.equals(dynamicNodeNameAnnotation.key()))
-                return dynamicNodesContext.getDynamicNodeName(dynamicNodeNameAnnotation.key());
-            return dynamicNodesContext.getDynamicNodeName(clazz);
+                return dynamicContext.getDynamicNodeName(dynamicNodeNameAnnotation.key());
+            return dynamicContext.getDynamicNodeName(clazz);
         }
         return null;
-    }
-
-    private static String toCamelCase(String value) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (i == 0)
-                stringBuilder.append(Character.toLowerCase(c));
-            else
-                stringBuilder.append(c);
-        }
-        return stringBuilder.toString();
     }
 }

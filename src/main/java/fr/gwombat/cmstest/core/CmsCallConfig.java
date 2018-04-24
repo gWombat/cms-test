@@ -6,7 +6,6 @@ import java.util.List;
 public class CmsCallConfig {
 
     private String              path;
-    private boolean             appendCityToPath;
     private List<CmsCallConfig> childCalls;
 
     public CmsCallConfig() {
@@ -19,14 +18,6 @@ public class CmsCallConfig {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public boolean isAppendCityToPath() {
-        return appendCityToPath;
-    }
-
-    public void setAppendCityToPath(boolean appendCityToPath) {
-        this.appendCityToPath = appendCityToPath;
     }
 
     public List<CmsCallConfig> getChildCalls() {
