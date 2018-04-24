@@ -57,12 +57,12 @@ public class CmsManagerTest {
         final CmsCallConfig childCall1 = CmsCallBuilder.init("person").build();
         final CmsCallConfig childCall3 = CmsCallBuilder.init("childNode").build();
         final CmsCallConfig childCall2 = CmsCallBuilder.init("otherNode_")
-                .withDynamicVariable("departureCityId")
+                .appendDynamicVariable("departureCityId")
                 .childCalls(Collections.singletonList(childCall3))
                 .build();
         final CmsCallConfig childCall4 = CmsCallBuilder.init("a_very_{complex}_")
                 .appendPath("path/with_")
-                .withDynamicVariable("argument")
+                .appendDynamicVariable("argument")
                 .build();
 
         cmsCallWrapper

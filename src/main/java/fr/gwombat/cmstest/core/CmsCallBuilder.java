@@ -23,7 +23,7 @@ public final class CmsCallBuilder {
         return this;
     }
 
-    public CmsCallBuilder withDynamicVariable(final String key) {
+    public CmsCallBuilder appendDynamicVariable(final String key) {
         this.stringBuilder.append(buildAndGetDynamicVariable(key));
         return this;
     }
