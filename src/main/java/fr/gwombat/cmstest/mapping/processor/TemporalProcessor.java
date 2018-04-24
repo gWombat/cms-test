@@ -1,6 +1,7 @@
 package fr.gwombat.cmstest.mapping.processor;
 
 import fr.gwombat.cmstest.configuration.CmsConfigurer;
+import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.context.ResultProcessingContext;
 import fr.gwombat.cmstest.mapping.registry.TemporalRegistryService;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
@@ -27,11 +28,15 @@ public class TemporalProcessor extends AbstractCmsProcessor {
     }
 
     @Override
-    public Object process(Map<String, String> cmsResults, final ResultProcessingContext context) {
+    public Object process(Map<String, String> cmsResults, final ResultProcessingContext context) throws CmsMappingException {
         LOGGER.debug("Processing property {}, of type {}", context.getPath(), context.getObjectType());
         LOGGER.debug("available results: {}", cmsResults);
         final String value = cmsResults.get(context.getPath());
         LOGGER.debug("Corresponding value is: {}", value);
+
+        if (context.getDateTimeFormatter() != null)
+            return temporalRegistryService.parse((Class<? extends Temporal>) context.getObjectType(), value, context.getDateTimeFormatter());
+
         return temporalRegistryService.parse((Class<? extends Temporal>) context.getObjectType(), value);
     }
 }

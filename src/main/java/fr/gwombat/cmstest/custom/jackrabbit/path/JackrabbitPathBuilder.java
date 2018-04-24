@@ -20,16 +20,6 @@ public final class JackrabbitPathBuilder {
         addPath(rootNode);
     }
 
-    private static JackrabbitPathBuilder from(final JackrabbitPathBuilder other) {
-        JackrabbitPathBuilder jackrabbitPathBuilder = new JackrabbitPathBuilder(null, other.separator);
-        jackrabbitPathBuilder.pathBuilder = other.pathBuilder;
-        jackrabbitPathBuilder.language = other.language;
-        jackrabbitPathBuilder.brand = other.brand;
-        jackrabbitPathBuilder.dynamicValues = other.dynamicValues;
-
-        return jackrabbitPathBuilder;
-    }
-
     public static JackrabbitPathBuilder init(final String rootNode, final String separator) {
         return new JackrabbitPathBuilder(rootNode, separator);
     }

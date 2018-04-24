@@ -18,6 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -78,20 +79,24 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
                         propertyKey = candidatePropertyName;
 
                     final Class<?> parameterType = matchMethod.getParameterTypes()[0];
-                    final boolean isParameterComplex = TypeUtils.isComplexType(parameterType);
 
                     ParameterizedType fieldParameterizedType = null;
                     if (field.getGenericType() instanceof ParameterizedType)
                         fieldParameterizedType = (ParameterizedType) field.getGenericType();
 
                     String propertyPath = getPropertyPath(context.getPath(), targetNodeName);
-                    if(!isParameterComplex)
+                    if (!TypeUtils.isComplexType(parameterType))
                         propertyPath = getPropertyPath(propertyPath, propertyKey);
+
+                    DateTimeFormatter dateTimeFormatter = AnnotationDetectorUtils.getDateTimeFormatter(field);
+                    if (dateTimeFormatter == null)
+                        dateTimeFormatter = AnnotationDetectorUtils.getDateTimeFormatter(matchMethod);
 
                     final ResultProcessingContext newContext = new ResultProcessingContext();
                     newContext.setObjectType(parameterType);
                     newContext.setParameterizedType(fieldParameterizedType);
                     newContext.setPath(propertyPath);
+                    newContext.setDateTimeFormatter(dateTimeFormatter);
                     newContext.setDynamicNodesContext(context.getDynamicNodesContext());
 
                     final Object paramValue = cmsResultProcessingChain.process(cmsResults, newContext);
@@ -115,33 +120,47 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
                 .orElse(null);
     }
 
-    private static boolean isCustomConverterAvailable(final Class<?> clazz) {
+    private boolean isCustomConverterAvailable(final Class<?> clazz) {
         final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
-        return cmsElementAnnotation != null && cmsElementAnnotation.converter() != DefaultConverter.class;
+        if (cmsElementAnnotation != null)
+            return cmsElementAnnotation.converter() != DefaultConverter.class;
+
+        final Converter converter = converterRegistryService.getConverter(clazz);
+        return converter != null;
     }
 
     private Object applyCustomConverter(final Class<?> clazz, final Map<String, String> cmsResults, final String rootName) throws CmsMappingException {
-        Object target;
+        Object target = null;
+        Converter converter;
+
         final CmsElement cmsElementAnnotation = clazz.getAnnotation(CmsElement.class);
 
-        final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
-        final Converter converter = converterRegistryService.getConverter(converterClass);
-        if (converter == null)
-            throw new CmsMappingException("Enable to find a converter of class " + converterClass);
+        if (cmsElementAnnotation != null) {
+            final Class<? extends Converter> converterClass = cmsElementAnnotation.converter();
+            converter = converterRegistryService.getConverter(converterClass);
+            if (converter == null)
+                throw new CmsMappingException("Enable to find a converter of class " + converterClass + ". Please register one");
+        } else
+            converter = converterRegistryService.getConverter(clazz);
 
-        final Map<String, String> test = getCmsResultsSubMap(cmsResults, rootName);
-        logger.debug("Invoking Converter {}...", converter);
-        target = converter.convert(test);
-        applyPostConverters(target);
+        if (converter != null) {
+            final Map<String, String> test = getCmsResultsSubMap(cmsResults, rootName);
+            logger.debug("Invoking Converter {}...", converter);
+            target = converter.convert(test);
+            applyPostConverters(target);
+        }
 
         return target;
     }
 
-    private void applyPostConverters(Object target) {
+    private void applyPostConverters(Object target) throws CmsMappingException {
         final CmsElement annotation = target.getClass().getAnnotation(CmsElement.class);
         if (annotation != null) {
             for (Class<? extends PostConverter> postConverterClass : annotation.postConverters()) {
                 final PostConverter postConverter = converterRegistryService.getPostConverter(postConverterClass);
+                if (postConverter == null)
+                    throw new CmsMappingException("Enable to find a converter of class " + postConverterClass + ". Please register one");
+
                 logger.debug("Invoking post-converter {}...", postConverter);
                 postConverter.postConvert(target);
             }

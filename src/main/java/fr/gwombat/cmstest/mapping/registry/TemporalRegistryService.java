@@ -1,5 +1,6 @@
 package fr.gwombat.cmstest.mapping.registry;
 
+import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.utils.TemporalUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,14 @@ public class TemporalRegistryService implements TemporalRegistry {
         if (dateTimeFormatter != null)
             formatters.add(dateTimeFormatter);
         return this;
+    }
+
+    public Temporal parse(final Class<? extends Temporal> clazz, final String formattedTemporal, DateTimeFormatter dateTimeFormatter) throws CmsMappingException {
+        try {
+            return TemporalUtils.cast(clazz, dateTimeFormatter, formattedTemporal);
+        } catch (DateTimeParseException e) {
+            throw new CmsMappingException(e);
+        }
     }
 
     public Temporal parse(final Class<? extends Temporal> clazz, final String formattedTemporal) {

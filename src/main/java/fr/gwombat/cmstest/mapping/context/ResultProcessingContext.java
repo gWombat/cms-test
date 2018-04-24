@@ -3,6 +3,7 @@ package fr.gwombat.cmstest.mapping.context;
 import fr.gwombat.cmstest.core.context.DynamicNodesContext;
 
 import java.lang.reflect.ParameterizedType;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by guillaume.
@@ -13,6 +14,7 @@ public class ResultProcessingContext {
 
     private Class<?>            objectType;
     private ParameterizedType   parameterizedType;
+    private DateTimeFormatter   dateTimeFormatter;
     private String              path;
     private DynamicNodesContext dynamicNodesContext;
 
@@ -46,6 +48,14 @@ public class ResultProcessingContext {
 
     public void setDynamicNodesContext(DynamicNodesContext dynamicNodesContext) {
         this.dynamicNodesContext = dynamicNodesContext;
+    }
+
+    public DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatter;
+    }
+
+    public void setDateTimeFormatter(DateTimeFormatter dateTimeFormatter) {
+        this.dateTimeFormatter = dateTimeFormatter;
     }
 
     @Override

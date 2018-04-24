@@ -2,15 +2,13 @@ package fr.gwombat.cmstest.mapping.utils;
 
 import fr.gwombat.cmstest.core.context.DynamicNodesContext;
 import fr.gwombat.cmstest.exceptions.CmsMappingException;
-import fr.gwombat.cmstest.mapping.annotations.CmsElement;
-import fr.gwombat.cmstest.mapping.annotations.CmsNode;
-import fr.gwombat.cmstest.mapping.annotations.CmsProperty;
-import fr.gwombat.cmstest.mapping.annotations.DynamicNodeName;
+import fr.gwombat.cmstest.mapping.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.time.format.DateTimeFormatter;
 
 public final class AnnotationDetectorUtils {
 
@@ -19,6 +17,24 @@ public final class AnnotationDetectorUtils {
     private static final String EMPTY_STRING = "";
 
     private AnnotationDetectorUtils() {
+    }
+
+    public static DateTimeFormatter getDateTimeFormatter(final Field field) {
+        final CmsTemporal cmsTemporalAnnotation = field.getAnnotation(CmsTemporal.class);
+        if (cmsTemporalAnnotation == null || "".equals(cmsTemporalAnnotation.format()))
+            return null;
+
+        final String dateFormat = cmsTemporalAnnotation.format();
+        return DateTimeFormatter.ofPattern(dateFormat);
+    }
+
+    public static DateTimeFormatter getDateTimeFormatter(final Method method) {
+        final CmsTemporal cmsTemporalAnnotation = method.getAnnotation(CmsTemporal.class);
+        if (cmsTemporalAnnotation == null || "".equals(cmsTemporalAnnotation.format()))
+            return null;
+
+        final String dateFormat = cmsTemporalAnnotation.format();
+        return DateTimeFormatter.ofPattern(dateFormat);
     }
 
     public static String detectPropertyName(final Field field) {

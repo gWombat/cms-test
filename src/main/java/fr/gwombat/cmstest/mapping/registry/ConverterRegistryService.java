@@ -29,18 +29,18 @@ public class ConverterRegistryService implements ConverterRegistry {
     }
 
     public <T> Converter<T> getConverter(final Class<T> clazz) {
-        for (Converter<?> converter : converters) {
-            if (converter.getClass() == clazz)
-                return (Converter<T>) converter;
-        }
-        return null;
+        return converters
+                .stream()
+                .filter(converter -> converter.getClass() == clazz)
+                .findFirst()
+                .orElse(null);
     }
 
     public <T> PostConverter<T> getPostConverter(final Class<T> clazz) {
-        for (PostConverter<?> postConverter : this.postConverters) {
-            if (postConverter.getClass() == clazz)
-                return (PostConverter<T>) postConverter;
-        }
-        return null;
+        return postConverters
+                .stream()
+                .filter(postConverter -> postConverter.getClass() == clazz)
+                .findFirst()
+                .orElse(null);
     }
 }
