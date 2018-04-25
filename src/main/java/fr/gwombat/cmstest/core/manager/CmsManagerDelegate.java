@@ -39,6 +39,7 @@ public class CmsManagerDelegate {
         return calls;
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T mapResults(final Map<String, String> cmsResults, final Class<T> resultType, final DynamicContext dynamicContext) throws CmsMappingException {
         final String nodeName = cmsConfigurer.getRootNodePrefix();
         final ResultProcessingContext context = new ResultProcessingContext();
