@@ -2,6 +2,7 @@ package fr.gwombat.cmstest.domain;
 
 import fr.gwombat.cmstest.configuration.EnableCms;
 import fr.gwombat.cmstest.custom.jackrabbit.configurers.AbstractJackrabbitConfigurer;
+import fr.gwombat.cmstest.mapping.registry.CallConfigurerRegistry;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistry;
 import fr.gwombat.cmstest.mapping.registry.TemporalRegistry;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,12 @@ public class CustomCmsConfigurer extends AbstractJackrabbitConfigurer {
     public void addConverters(ConverterRegistry converterRegistry) {
         converterRegistry.addConverter(new PhoneNumberConverter());
         converterRegistry.addPostConverter(new PersonPostConverter());
+    }
+
+    @Override
+    public void addCallConfigurers(CallConfigurerRegistry callConfigurerRegistry) {
+        super.addCallConfigurers(callConfigurerRegistry);
+        callConfigurerRegistry.addCallPostConfiguer(new CustomPostConfigurerCms());
     }
 
     @Override

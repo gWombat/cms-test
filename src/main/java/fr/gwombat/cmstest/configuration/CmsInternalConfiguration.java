@@ -70,6 +70,7 @@ public class CmsInternalConfiguration {
     public CallConfigurationChain callConfigurationChain(final CallConfigurerRegistryService callConfigurerRegistryService) {
         final CallConfigurationChainImpl callConfigurationChain = new CallConfigurationChainImpl();
         callConfigurationChain.addConfigurers(callConfigurerRegistryService.getConfigurers());
+        callConfigurationChain.addPostConfigurers(callConfigurerRegistryService.getPostConfigurers());
 
         return callConfigurationChain;
     }
