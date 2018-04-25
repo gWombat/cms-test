@@ -4,14 +4,16 @@ import fr.gwombat.cmstest.core.CmsCallBuilder;
 import fr.gwombat.cmstest.core.CmsCallConfig;
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 import fr.gwombat.cmstest.core.context.DynamicContext;
-import fr.gwombat.cmstest.core.manager.CmsManager;
+import fr.gwombat.cmstest.core.manager.CmsManagerDelegate;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallConfigWrapper;
+import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitConfigurationContext;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
 import fr.gwombat.cmstest.domain.ExtendedPerson;
 import fr.gwombat.cmstest.domain.Gender;
 import fr.gwombat.cmstest.domain.Person;
-import fr.gwombat.cmstest.exceptions.CmsRuntimeException;
+import fr.gwombat.cmstest.exceptions.CmsConfigurationException;
+import fr.gwombat.cmstest.exceptions.CmsMappingException;
 import fr.gwombat.cmstest.mapping.service.CmsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +49,7 @@ public class CmsManagerTest {
     private CmsService cmsService;
 
     @Autowired
-    private CmsManager cmsManager;
+    private CmsManagerDelegate cmsManagerDelegate;
 
     private CmsCallConfigWrapper initCmsCalls() {
         final JackrabbitCallConfigWrapper cmsCallWrapper = new JackrabbitCallConfigWrapper();
@@ -75,43 +77,50 @@ public class CmsManagerTest {
     }
 
     @Test
-    public void test_configuration_calls() {
+    public void test_configuration_calls() throws CmsConfigurationException {
         final CmsCallConfigWrapper cmsCallConfigWrapper = initCmsCalls();
+
         final DynamicContext dynamicContext = new DynamicContext();
         dynamicContext
                 .addDynamicPathVariable("departureCityId", String.valueOf(1188L))
                 .addDynamicPathVariable("complex", "complex");
 //                .addDynamicPathVariable("argument", "argument");
 
-        final List<CmsPath> calls = cmsManager.createCmsCallsTemporary(cmsCallConfigWrapper, dynamicContext);
+        final JackrabbitConfigurationContext configurationContext = new JackrabbitConfigurationContext();
+        configurationContext.setDynamicContext(dynamicContext);
+        configurationContext.setLanguage("fr");
+        configurationContext.setBrandNode("my-site");
+        configurationContext.setBrandNodeSpecific("my-site-specific");
+
+        final List<CmsPath> calls = cmsManagerDelegate.prepareAndConfigureCalls(configurationContext, cmsCallConfigWrapper);
         assertNotNull(calls);
         assertEquals(8, calls.size());
         assertEquals("my-page/person", (calls.get(0)).getPath());
-        assertEquals("my-page/person", ((JackrabbitPath) calls.get(0)).getResolvedPath());
+        assertEquals("my-page/person", (calls.get(0)).getResolvedPath());
         assertEquals("fr/my-site/my-page/person", ((JackrabbitPath) calls.get(0)).getFullCmsPath());
 
         assertEquals("my-page/otherNode_", (calls.get(1)).getPath());
-        assertEquals("my-page/otherNode_1188", ((JackrabbitPath) calls.get(1)).getResolvedPath());
+        assertEquals("my-page/otherNode_1188", (calls.get(1)).getResolvedPath());
         assertEquals("fr/my-site/my-page/otherNode_1188", ((JackrabbitPath) calls.get(1)).getFullCmsPath());
 
         assertEquals("my-page/otherNode_/childNode", (calls.get(2)).getPath());
-        assertEquals("my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(2)).getResolvedPath());
+        assertEquals("my-page/otherNode_1188/childNode", (calls.get(2)).getResolvedPath());
         assertEquals("fr/my-site/my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(2)).getFullCmsPath());
 
         assertEquals("my-page/person", (calls.get(4)).getPath());
-        assertEquals("my-page/person", ((JackrabbitPath) calls.get(4)).getResolvedPath());
+        assertEquals("my-page/person", (calls.get(4)).getResolvedPath());
         assertEquals("fr/my-site-specific/my-page/person", ((JackrabbitPath) calls.get(4)).getFullCmsPath());
 
         assertEquals("my-page/otherNode_", (calls.get(5)).getPath());
-        assertEquals("my-page/otherNode_1188", ((JackrabbitPath) calls.get(5)).getResolvedPath());
+        assertEquals("my-page/otherNode_1188", (calls.get(5)).getResolvedPath());
         assertEquals("fr/my-site-specific/my-page/otherNode_1188", ((JackrabbitPath) calls.get(5)).getFullCmsPath());
 
         assertEquals("my-page/otherNode_/childNode", (calls.get(6)).getPath());
-        assertEquals("my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(6)).getResolvedPath());
+        assertEquals("my-page/otherNode_1188/childNode", (calls.get(6)).getResolvedPath());
         assertEquals("fr/my-site-specific/my-page/otherNode_1188/childNode", ((JackrabbitPath) calls.get(6)).getFullCmsPath());
 
         assertEquals("my-page/a_very__path/with_", (calls.get(7)).getPath());
-        assertEquals("my-page/a_very_complex_path/with_${argument}", ((JackrabbitPath) calls.get(7)).getResolvedPath());
+        assertEquals("my-page/a_very_complex_path/with_${argument}", (calls.get(7)).getResolvedPath());
     }
 
 //    @Test
@@ -124,15 +133,6 @@ public class CmsManagerTest {
 //        assertNotNull(intTest);
 //        assertEquals(new Integer(1000), intTest);
 //    }
-
-    @Test(expected = CmsRuntimeException.class)
-    public void test_simple_object_without_propertyName_should_fail() {
-        final Map<String, String> results = new HashMap<>(0);
-        results.put("fr/my-site/myId", "1000");
-        given(cmsService.getCmsResults(any())).willReturn(results);
-
-        cmsManager.produceComplexObject(null, Integer.class);
-    }
 
 //    @Test
 //    public void test_collection_object() {
@@ -184,14 +184,15 @@ public class CmsManagerTest {
     }
 
     @Test
-    public void test_complex_object() {
+    public void test_complex_object() throws CmsMappingException {
         final Map<String, String> results = initResults();
         given(cmsService.getCmsResults(any())).willReturn(results);
 
         final DynamicContext dynamicContext = new DynamicContext();
         dynamicContext.addDynamicNodeName(Person.class, "my-page/person");
 
-        final Person personResult = cmsManager.produceComplexObject(null, Person.class, dynamicContext);
+        final Map<String, String> cmsResults = cmsService.getCmsResults(Collections.emptyList());
+        final Person personResult = cmsManagerDelegate.mapResults(cmsResults, Person.class, dynamicContext);
 
         assertNotNull(personResult);
         assertEquals("Fabbi", personResult.getName());
@@ -225,7 +226,7 @@ public class CmsManagerTest {
     }
 
     @Test
-    public void test_inheritance() {
+    public void test_inheritance() throws CmsMappingException {
         final Map<String, String> results = initResults();
         results.put("fr/my-site/my-page/person/customProperty", "test");
         results.put("fr/my-site/my-page/person/birthDate", "01/02/1985");
@@ -234,7 +235,9 @@ public class CmsManagerTest {
         final DynamicContext dynamicContext = new DynamicContext();
         dynamicContext.addDynamicNodeName(Person.class, "my-page/person");
 
-        final ExtendedPerson personResult = cmsManager.produceComplexObject(null, ExtendedPerson.class, dynamicContext);
+        final Map<String, String> cmsResults = cmsService.getCmsResults(Collections.emptyList());
+        final ExtendedPerson personResult = cmsManagerDelegate.mapResults(cmsResults, ExtendedPerson.class, dynamicContext);
+
         assertNotNull(personResult);
         assertEquals("test", personResult.getCustomProperty());
         assertNotNull(personResult.getBirthDate());

@@ -12,7 +12,7 @@ public class JackrabbitConfigurationContext extends ConfigurationContext {
         return language;
     }
 
-    void setLanguage(String language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 
@@ -20,7 +20,7 @@ public class JackrabbitConfigurationContext extends ConfigurationContext {
         return brandNode;
     }
 
-    void setBrandNode(String brandNode) {
+    public void setBrandNode(String brandNode) {
         this.brandNode = brandNode;
     }
 
@@ -28,7 +28,7 @@ public class JackrabbitConfigurationContext extends ConfigurationContext {
         return brandNodeSpecific;
     }
 
-    void setBrandNodeSpecific(String brandNodeSpecific) {
+    public void setBrandNodeSpecific(String brandNodeSpecific) {
         this.brandNodeSpecific = brandNodeSpecific;
     }
 }

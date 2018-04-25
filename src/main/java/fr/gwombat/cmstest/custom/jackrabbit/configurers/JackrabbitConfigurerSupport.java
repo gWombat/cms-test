@@ -2,11 +2,9 @@ package fr.gwombat.cmstest.custom.jackrabbit.configurers;
 
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
 import fr.gwombat.cmstest.core.configurers.CmsCallConfigurer;
+import fr.gwombat.cmstest.core.manager.CmsManager;
 import fr.gwombat.cmstest.core.manager.CmsManagerDelegate;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitManagerImpl;
-import fr.gwombat.cmstest.core.manager.CmsManager;
-import fr.gwombat.cmstest.mapping.processor.CmsResultProcessingChain;
-import fr.gwombat.cmstest.mapping.service.CmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
@@ -15,9 +13,7 @@ import java.util.List;
 
 public class JackrabbitConfigurerSupport {
 
-    //    private CmsService                   cmsService;
     private AbstractJackrabbitConfigurer cmsConfigurer;
-    //    private CmsResultProcessingChain     cmsResultProcessingChain;
     private CallConfigurationChain       callConfigurationChain;
     private CmsManagerDelegate           cmsManagerDelegate;
 
@@ -38,15 +34,8 @@ public class JackrabbitConfigurerSupport {
         jackrabbitManager.setCmsConfigurer(cmsConfigurer);
         jackrabbitManager.setCallConfigurationChain(callConfigurationChain);
         jackrabbitManager.setCmsManagerDelegate(cmsManagerDelegate);
-//        jackrabbitManager.setCmsService(cmsService);
-//        jackrabbitManager.setCmsResultProcessingChain(cmsResultProcessingChain);
         return jackrabbitManager;
     }
-
-//    @Autowired
-//    public void setCmsService(CmsService cmsService) {
-//        this.cmsService = cmsService;
-//    }
 
 
     @Autowired
@@ -58,11 +47,6 @@ public class JackrabbitConfigurerSupport {
     public void setCmsConfigurer(AbstractJackrabbitConfigurer cmsConfigurer) {
         this.cmsConfigurer = cmsConfigurer;
     }
-
-//    @Autowired
-//    public void setCmsResultProcessingChain(CmsResultProcessingChain cmsResultProcessingChain) {
-//        this.cmsResultProcessingChain = cmsResultProcessingChain;
-//    }
 
     @Autowired
     public void setCallConfigurationChain(CallConfigurationChain callConfigurationChain) {

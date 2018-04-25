@@ -33,14 +33,14 @@ public class CmsManagerDelegate {
         return mapResults(cmsResults, resultType, dynamicContext);
     }
 
-    private List<CmsPath> prepareAndConfigureCalls(final ConfigurationContext configurationContext, final CmsCallConfigWrapper callConfigWrapper) throws CmsConfigurationException {
+    public List<CmsPath> prepareAndConfigureCalls(final ConfigurationContext configurationContext, final CmsCallConfigWrapper callConfigWrapper) throws CmsConfigurationException {
         final List<CmsPath> calls = new ArrayList<>(0);
         callConfigurationChain.configure(callConfigWrapper, calls, configurationContext);
         return calls;
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T mapResults(final Map<String, String> cmsResults, final Class<T> resultType, final DynamicContext dynamicContext) throws CmsMappingException {
+    public <T> T mapResults(final Map<String, String> cmsResults, final Class<T> resultType, final DynamicContext dynamicContext) throws CmsMappingException {
         final String nodeName = cmsConfigurer.getRootNodePrefix();
         final ResultProcessingContext context = new ResultProcessingContext();
         context.setPath(nodeName);
