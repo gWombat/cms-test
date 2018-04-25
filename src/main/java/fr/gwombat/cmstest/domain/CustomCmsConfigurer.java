@@ -1,7 +1,7 @@
 package fr.gwombat.cmstest.domain;
 
 import fr.gwombat.cmstest.configuration.EnableCms;
-import fr.gwombat.cmstest.custom.jackrabbit.AbstractJackrabbitConfigurer;
+import fr.gwombat.cmstest.custom.jackrabbit.configurers.AbstractJackrabbitConfigurer;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistry;
 import fr.gwombat.cmstest.mapping.registry.TemporalRegistry;
 import org.springframework.context.annotation.Configuration;

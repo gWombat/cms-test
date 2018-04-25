@@ -45,6 +45,7 @@ public class JackrabbitPath implements CmsPath {
         return path;
     }
 
+    @Override
     public String getResolvedPath() {
         return resolvedPath;
     }
