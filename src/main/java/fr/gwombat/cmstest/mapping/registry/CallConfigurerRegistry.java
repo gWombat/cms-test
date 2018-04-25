@@ -9,7 +9,7 @@ public interface CallConfigurerRegistry {
 
     CallConfigurerRegistry addCallConfigurer(CmsCallConfigurer callConfigurer);
 
-    CallConfigurerRegistry addCallConfigurers(List<CmsCallConfigurer> configurers);
+    <T extends CmsCallConfigurer> CallConfigurerRegistry addCallConfigurers(List<T> configurers);
 
     CallConfigurerRegistry addCallPostConfiguer(CmsCallPostConfigurer postConfigurer);
 }

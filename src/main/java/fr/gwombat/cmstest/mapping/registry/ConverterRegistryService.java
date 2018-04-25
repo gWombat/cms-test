@@ -28,7 +28,6 @@ public class ConverterRegistryService implements ConverterRegistry {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> Converter<T> getConverter(final Class<T> clazz) {
         return converters
                 .stream()
@@ -37,7 +36,6 @@ public class ConverterRegistryService implements ConverterRegistry {
                 .orElse(null);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> PostConverter<T> getPostConverter(final Class<T> clazz) {
         return postConverters
                 .stream()

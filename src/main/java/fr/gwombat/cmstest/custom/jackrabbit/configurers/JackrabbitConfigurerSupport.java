@@ -9,7 +9,7 @@ import fr.gwombat.cmstest.mapping.service.CmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JackrabbitConfigurerSupport {
@@ -21,17 +21,13 @@ public class JackrabbitConfigurerSupport {
 
     @Bean
     public List<CmsCallConfigurer> nodesConfigurers() {
-        final List<CmsCallConfigurer> configurers = new ArrayList<>(0);
-
         final AbstractJackrabbitNodeConfigurer defaultNodesConfigurer = new DefaultNodesConfigurer();
         defaultNodesConfigurer.setCmsConfigurer(cmsConfigurer);
-        configurers.add(defaultNodesConfigurer);
 
         final AbstractJackrabbitNodeConfigurer specificNodesConfigurer = new SpecificNodesConfigurer();
         specificNodesConfigurer.setCmsConfigurer(cmsConfigurer);
-        configurers.add(specificNodesConfigurer);
 
-        return configurers;
+        return Arrays.asList(defaultNodesConfigurer, specificNodesConfigurer);
     }
 
     @Bean

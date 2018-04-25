@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface CallConfigurationChain {
 
-    void configure(CmsCallConfigWrapper cmsCallConfigWrapper, List<CmsPath> calls, ConfigurationContext configurationContext) throws CmsConfigurationException;
+    <T extends CmsCallConfigWrapper> void configure(T cmsCallConfigWrapper, List<CmsPath> calls, ConfigurationContext configurationContext) throws CmsConfigurationException;
 
 }

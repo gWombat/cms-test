@@ -24,7 +24,7 @@ public class CallConfigurerRegistryService implements CallConfigurerRegistry {
     }
 
     @Override
-    public CallConfigurerRegistry addCallConfigurers(List<CmsCallConfigurer> configurers) {
+    public <T extends CmsCallConfigurer> CallConfigurerRegistry addCallConfigurers(List<T> configurers) {
         if (configurers != null)
             this.configurers.addAll(configurers);
         return this;

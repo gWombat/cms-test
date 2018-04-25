@@ -19,8 +19,7 @@ public class CallConfigurationChainImpl implements CallConfigurationChain {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void configure(final CmsCallConfigWrapper cmsCallConfigWrapper, final List<CmsPath> calls, final ConfigurationContext context) throws CmsConfigurationException {
+    public <T extends CmsCallConfigWrapper> void configure(final T cmsCallConfigWrapper, final List<CmsPath> calls, final ConfigurationContext context) throws CmsConfigurationException {
 
         for (CmsCallConfigurer configurer : configurers)
             if (configurer.isExecutable(cmsCallConfigWrapper))
