@@ -8,23 +8,12 @@ public final class WordUtils {
     public static String capitalize(String word) {
         if (word == null || "".equals(word))
             return word;
-
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(Character.toUpperCase(word.charAt(0)));
-        stringBuilder.append(word.substring(1));
-
-        return stringBuilder.toString();
+        return Character.toUpperCase(word.charAt(0)) + word.substring(1);
     }
 
     public static String toCamelCase(String value) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (i == 0)
-                stringBuilder.append(Character.toLowerCase(c));
-            else
-                stringBuilder.append(c);
-        }
-        return stringBuilder.toString();
+        if (value == null || "".equals(value))
+            return value;
+        return Character.toLowerCase(value.charAt(0)) + value.substring(1);
     }
 }

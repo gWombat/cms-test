@@ -28,6 +28,7 @@ public class TemporalProcessor extends AbstractCmsProcessor {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object process(Map<String, String> cmsResults, final ResultProcessingContext context) throws CmsMappingException {
         LOGGER.debug("Processing property {}, of type {}", context.getPath(), context.getObjectType());
         LOGGER.debug("available results: {}", cmsResults);

@@ -10,8 +10,8 @@ import java.util.List;
 
 public class CallConfigurationChainImpl implements CallConfigurationChain {
 
-    private final List<AbstractCallConfigurer> configurers;
-    private final List<CmsCallPostConfigurer>  postConfigurers;
+    private final List<CmsCallConfigurer>     configurers;
+    private final List<CmsCallPostConfigurer> postConfigurers;
 
     public CallConfigurationChainImpl() {
         configurers = new ArrayList<>(0);
@@ -19,16 +19,17 @@ public class CallConfigurationChainImpl implements CallConfigurationChain {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void configure(final CmsCallConfigWrapper cmsCallConfigWrapper, final List<CmsPath> calls, final ConfigurationContext context) throws CmsConfigurationException {
 
-        for (AbstractCallConfigurer<CmsCallConfigWrapper> configurer : configurers)
+        for (CmsCallConfigurer configurer : configurers)
             if (configurer.isExecutable(cmsCallConfigWrapper))
                 configurer.configure(cmsCallConfigWrapper, calls, context);
 
         postConfigurers.forEach(postConfigurer -> postConfigurer.postConfigure(calls));
     }
 
-    public void addConfigurers(List<AbstractCallConfigurer<?>> configurers) {
+    public void addConfigurers(List<CmsCallConfigurer> configurers) {
         this.configurers.addAll(configurers);
     }
 

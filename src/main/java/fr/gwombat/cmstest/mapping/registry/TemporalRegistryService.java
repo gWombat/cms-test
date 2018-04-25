@@ -19,7 +19,7 @@ public class TemporalRegistryService implements TemporalRegistry {
 
 
     public TemporalRegistryService() {
-        formatters = new ArrayList<DateTimeFormatter>();
+        formatters = new ArrayList<>();
     }
 
     @Override

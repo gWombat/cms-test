@@ -7,15 +7,15 @@ import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitConfigurationContext;
 
 import java.util.List;
 
-public class SpecificNodesConfigurer extends AbstractNodeConfigurer {
+public class SpecificNodesConfigurer extends AbstractJackrabbitNodeConfigurer {
 
     @Override
-    protected boolean isExecutable(JackrabbitCallConfigWrapper cmsCallWrapper) {
+    public boolean isExecutable(JackrabbitCallConfigWrapper cmsCallWrapper) {
         return cmsCallWrapper.isCallSpecificNodes();
     }
 
     @Override
-    protected void configure(JackrabbitCallConfigWrapper cmsCallWrapper, List<CmsPath> calls, ConfigurationContext context) {
+    public void configure(JackrabbitCallConfigWrapper cmsCallWrapper, List<CmsPath> calls, ConfigurationContext context) {
         final JackrabbitConfigurationContext localContext = (JackrabbitConfigurationContext) context;
         configureCallRecursive(cmsCallWrapper.getCalls(), calls, localContext, cmsCallWrapper.getRootNodePath(), null, true);
     }

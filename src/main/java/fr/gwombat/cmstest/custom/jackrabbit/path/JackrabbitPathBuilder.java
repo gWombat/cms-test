@@ -7,11 +7,11 @@ import java.util.regex.Pattern;
 
 public final class JackrabbitPathBuilder {
 
-    private StringBuilder       pathBuilder;
-    private String              language;
-    private String              brand;
-    private String              separator;
-    private Map<String, String> dynamicVariables;
+    private final StringBuilder       pathBuilder;
+    private       String              language;
+    private       String              brand;
+    private final String              separator;
+    private       Map<String, String> dynamicVariables;
 
     private JackrabbitPathBuilder(final String rootNode, final String separator) {
         pathBuilder = new StringBuilder();
@@ -118,14 +118,14 @@ public final class JackrabbitPathBuilder {
             else
                 replacement = dynamicVariables.get(matcher.group(1));
 
-            builder.append(path.substring(i, matcher.start()));
+            builder.append(path, i, matcher.start());
             if (replacement == null)
                 builder.append(matcher.group(0));
             else
                 builder.append(replacement);
             i = matcher.end();
         }
-        builder.append(path.substring(i, path.length()));
+        builder.append(path, i, path.length());
         return builder.toString();
 
     }

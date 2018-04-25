@@ -55,9 +55,7 @@ public final class TypeUtils {
             return true;
         if (parameterType == short.class)
             return true;
-        if (parameterType == char.class)
-            return true;
-        return false;
+        return parameterType == char.class;
     }
 
     public static boolean isSimpleType(final Class<?> parameterType) {
@@ -82,6 +80,7 @@ public final class TypeUtils {
         return Enum.class.isAssignableFrom(parameterType);
     }
 
+    @SuppressWarnings("unchecked")
     public static Object castValue(final Class<?> parameterType, final String cmsValue) {
         if (cmsValue == null)
             return null;

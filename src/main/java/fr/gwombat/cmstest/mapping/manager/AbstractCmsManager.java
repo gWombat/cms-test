@@ -58,6 +58,7 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
         return produceResultInternal(callWrapper, resultType, dynamicContext);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T produceResultInternal(final CmsCallConfigWrapper callConfigWrapper, final Class<T> resultType, final DynamicContext dynamicContext) {
         final Map<String, String> cmsResults = cmsService.getCmsResults();
 

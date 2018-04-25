@@ -7,8 +7,8 @@ public final class CmsCallBuilder {
     public static final String DYNAMIC_VARIABLE_PREFIX = "${";
     public static final String DYNAMIC_VARIABLE_SUFFIX = "}";
 
-    private StringBuilder       stringBuilder;
-    private List<CmsCallConfig> childCalls;
+    private final StringBuilder       stringBuilder;
+    private       List<CmsCallConfig> childCalls;
 
     private CmsCallBuilder(final String path) {
         this.stringBuilder = new StringBuilder(path);

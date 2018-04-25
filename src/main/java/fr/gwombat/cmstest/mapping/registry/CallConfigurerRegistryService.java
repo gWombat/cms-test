@@ -1,6 +1,6 @@
 package fr.gwombat.cmstest.mapping.registry;
 
-import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
+import fr.gwombat.cmstest.core.configurers.CmsCallConfigurer;
 import fr.gwombat.cmstest.core.configurers.CmsCallPostConfigurer;
 
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import java.util.List;
 
 public class CallConfigurerRegistryService implements CallConfigurerRegistry {
 
-    private final List<AbstractCallConfigurer<?>> configurers;
-    private final List<CmsCallPostConfigurer>     postConfigurers;
+    private final List<CmsCallConfigurer>     configurers;
+    private final List<CmsCallPostConfigurer> postConfigurers;
 
     public CallConfigurerRegistryService() {
         configurers = new ArrayList<>(0);
@@ -17,14 +17,14 @@ public class CallConfigurerRegistryService implements CallConfigurerRegistry {
     }
 
     @Override
-    public CallConfigurerRegistry addCallConfigurer(AbstractCallConfigurer<?> callConfigurer) {
+    public CallConfigurerRegistry addCallConfigurer(CmsCallConfigurer callConfigurer) {
         configurers.add(callConfigurer);
 
         return this;
     }
 
     @Override
-    public CallConfigurerRegistry addCallConfigurers(List<AbstractCallConfigurer<?>> configurers) {
+    public CallConfigurerRegistry addCallConfigurers(List<CmsCallConfigurer> configurers) {
         if (configurers != null)
             this.configurers.addAll(configurers);
         return this;
@@ -37,7 +37,7 @@ public class CallConfigurerRegistryService implements CallConfigurerRegistry {
         return this;
     }
 
-    public List<AbstractCallConfigurer<?>> getConfigurers() {
+    public List<CmsCallConfigurer> getConfigurers() {
         return configurers;
     }
 

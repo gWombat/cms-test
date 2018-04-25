@@ -155,6 +155,7 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
         return target;
     }
 
+    @SuppressWarnings("unchecked")
     private void applyPostConverters(Object target) throws CmsMappingException {
         final CmsElement annotation = target.getClass().getAnnotation(CmsElement.class);
         if (annotation != null) {

@@ -23,6 +23,7 @@ public class SetterInvoker {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static BiConsumer<Object, Object> createSetter(final MethodHandles.Lookup lookup, final MethodHandle setter) throws CmsMappingException {
         try {
             final CallSite site = LambdaMetafactory.metafactory(lookup,

@@ -1,8 +1,7 @@
 package fr.gwombat.cmstest.custom.jackrabbit.configurers;
 
-import fr.gwombat.cmstest.configuration.CmsConfigurer;
-import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
+import fr.gwombat.cmstest.core.configurers.CmsCallConfigurer;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitManagerImpl;
 import fr.gwombat.cmstest.mapping.manager.CmsManager;
 import fr.gwombat.cmstest.mapping.processor.CmsResultProcessingChain;
@@ -10,7 +9,7 @@ import fr.gwombat.cmstest.mapping.service.CmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JackrabbitConfigurerSupport {
@@ -21,14 +20,18 @@ public class JackrabbitConfigurerSupport {
     private CallConfigurationChain       callConfigurationChain;
 
     @Bean
-    public List<AbstractCallConfigurer<?>> nodesConfigurers() {
-        final DefaultNodesConfigurer defaultNodesConfigurer = new DefaultNodesConfigurer();
+    public List<CmsCallConfigurer> nodesConfigurers() {
+        final List<CmsCallConfigurer> configurers = new ArrayList<>(0);
+
+        final AbstractJackrabbitNodeConfigurer defaultNodesConfigurer = new DefaultNodesConfigurer();
         defaultNodesConfigurer.setCmsConfigurer(cmsConfigurer);
+        configurers.add(defaultNodesConfigurer);
 
-        final SpecificNodesConfigurer specificNodesConfigurer = new SpecificNodesConfigurer();
+        final AbstractJackrabbitNodeConfigurer specificNodesConfigurer = new SpecificNodesConfigurer();
         specificNodesConfigurer.setCmsConfigurer(cmsConfigurer);
+        configurers.add(specificNodesConfigurer);
 
-        return Arrays.asList(defaultNodesConfigurer, specificNodesConfigurer);
+        return configurers;
     }
 
     @Bean

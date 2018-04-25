@@ -7,10 +7,10 @@ import fr.gwombat.cmstest.exceptions.CmsConfigurationException;
 
 import java.util.List;
 
-public abstract class AbstractCallConfigurer<T extends CmsCallConfigWrapper> {
+public interface CmsCallConfigurer<T extends CmsCallConfigWrapper> {
 
-    protected abstract boolean isExecutable(T cmsCallWrapper);
+    boolean isExecutable(T cmsCallWrapper);
 
-    protected abstract void configure(T cmsCallWrapper, List<CmsPath> calls, ConfigurationContext context) throws CmsConfigurationException;
+    void configure(T cmsCallWrapper, List<CmsPath> calls, ConfigurationContext context) throws CmsConfigurationException;
 
 }

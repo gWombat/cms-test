@@ -2,7 +2,7 @@ package fr.gwombat.cmstest.custom.jackrabbit.configurers;
 
 import fr.gwombat.cmstest.configuration.CmsConfigurer;
 import fr.gwombat.cmstest.core.CmsCallConfig;
-import fr.gwombat.cmstest.core.configurers.AbstractCallConfigurer;
+import fr.gwombat.cmstest.core.configurers.CmsCallConfigurer;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallConfigWrapper;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitConfigurationContext;
@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public abstract class AbstractNodeConfigurer extends AbstractCallConfigurer<JackrabbitCallConfigWrapper> {
+public abstract class AbstractJackrabbitNodeConfigurer implements CmsCallConfigurer<JackrabbitCallConfigWrapper> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNodeConfigurer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJackrabbitNodeConfigurer.class);
 
     private CmsConfigurer cmsConfigurer;
 
