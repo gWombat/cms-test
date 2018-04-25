@@ -7,6 +7,7 @@ import fr.gwombat.cmstest.mapping.context.ResultProcessingContext;
 import fr.gwombat.cmstest.mapping.converters.Converter;
 import fr.gwombat.cmstest.mapping.converters.DefaultConverter;
 import fr.gwombat.cmstest.mapping.converters.PostConverter;
+import fr.gwombat.cmstest.mapping.invoker.SetterInvoker;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistryService;
 import fr.gwombat.cmstest.mapping.utils.AnnotationDetectorUtils;
 import fr.gwombat.cmstest.mapping.utils.TypeUtils;
@@ -15,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.time.format.DateTimeFormatter;
@@ -73,6 +73,7 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
                 }
 
                 logger.debug("Matching method found! {}", matchMethod);
+                matchMethod.setAccessible(true);
                 if (matchMethod.getParameterCount() == 1) {
                     final String candidatePropertyName = AnnotationDetectorUtils.detectPropertyName(matchMethod);
                     if (candidatePropertyName != null)
@@ -102,12 +103,13 @@ public class ComplexTypeProcessor extends AbstractChainableCmsProcessor {
                     final Object paramValue = cmsResultProcessingChain.process(cmsResults, newContext);
 
                     logger.debug("Invoking setter {}", matchMethod);
-                    matchMethod.invoke(target, paramValue);
+                    //matchMethod.invoke(target, paramValue);
+                    SetterInvoker.invokeSetter(target, matchMethod, paramValue); // invocation via Lambdametafactory
                     logger.debug("Setter {} invoked successfully!", matchMethod);
                 }
             }
             applyPostConverters(target);
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (IllegalAccessException /*| InvocationTargetException */ | InstantiationException e) {
             throw new CmsMappingException(e);
         }
         return target;

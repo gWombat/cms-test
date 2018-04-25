@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.temporal.Temporal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class TypeUtils {
 
@@ -107,10 +108,10 @@ public final class TypeUtils {
     }
 
     public static List<Method> getAllMethods(final Class<?> clazz) {
-        LOGGER.debug("Looking for all methods of class {}", clazz);
+        LOGGER.debug("Looking for all setters of class {}", clazz);
         List<Method> methods = new ArrayList<>(0);
         methods = addMethodsRecursively(methods, clazz);
-        LOGGER.debug("{} methods found!", methods.size());
+        LOGGER.debug("{} setters found!", methods.size());
         return methods;
     }
 
@@ -118,8 +119,10 @@ public final class TypeUtils {
         if (clazz == Object.class)
             return methods;
 
-        LOGGER.debug("Adding all methods of class {}", clazz);
-        methods.addAll(Arrays.asList(clazz.getMethods()));
+        LOGGER.debug("Adding all setters of class {}", clazz);
+        methods.addAll(Arrays.stream(clazz.getMethods())
+                .filter(method -> method.getName().startsWith("set"))
+                .collect(Collectors.toList()));
         return addMethodsRecursively(methods, clazz.getSuperclass());
     }
 
