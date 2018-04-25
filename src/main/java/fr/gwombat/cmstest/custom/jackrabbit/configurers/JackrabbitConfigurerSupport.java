@@ -21,10 +21,10 @@ public class JackrabbitConfigurerSupport {
 
     @Bean
     public List<CmsCallConfigurer> nodesConfigurers() {
-        final AbstractJackrabbitNodeConfigurer defaultNodesConfigurer = new DefaultNodesConfigurer();
+        final AbstractJackrabbitCallConfigurer defaultNodesConfigurer = new DefaultNodesConfigurer();
         defaultNodesConfigurer.setCmsConfigurer(cmsConfigurer);
 
-        final AbstractJackrabbitNodeConfigurer specificNodesConfigurer = new SpecificNodesConfigurer();
+        final AbstractJackrabbitCallConfigurer specificNodesConfigurer = new SpecificNodesConfigurer();
         specificNodesConfigurer.setCmsConfigurer(cmsConfigurer);
 
         return Arrays.asList(defaultNodesConfigurer, specificNodesConfigurer);

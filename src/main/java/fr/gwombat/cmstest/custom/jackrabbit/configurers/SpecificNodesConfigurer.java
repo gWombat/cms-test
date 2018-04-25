@@ -8,7 +8,7 @@ import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitConfigurationContext;
 
 import java.util.List;
 
-public class SpecificNodesConfigurer extends AbstractJackrabbitNodeConfigurer {
+public class SpecificNodesConfigurer extends AbstractJackrabbitCallConfigurer {
 
     @Override
     public boolean isExecutable(CmsCallConfigWrapper cmsCallWrapper) {

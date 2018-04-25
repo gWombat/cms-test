@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public abstract class AbstractJackrabbitNodeConfigurer implements CmsCallConfigurer {
+public abstract class AbstractJackrabbitCallConfigurer implements CmsCallConfigurer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJackrabbitNodeConfigurer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJackrabbitCallConfigurer.class);
 
     private CmsConfigurer cmsConfigurer;
 
