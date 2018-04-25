@@ -52,7 +52,7 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
 
         return produceResultInternal(callWrapper, resultType, dynamicContext);
     }
-    
+
     private <T> T produceResultInternal(final CmsCallConfigWrapper callConfigWrapper, final Class<T> resultType, final DynamicContext dynamicContext) {
         try {
             final ConfigurationContext configurationContext = createConfigurationContext(cmsConfigurer, dynamicContext);
