@@ -3,7 +3,7 @@ package fr.gwombat.cmstest.custom.jackrabbit;
 import fr.gwombat.cmstest.core.context.ConfigurationContext;
 import fr.gwombat.cmstest.core.context.DynamicContext;
 import fr.gwombat.cmstest.custom.jackrabbit.configurers.AbstractJackrabbitConfigurer;
-import fr.gwombat.cmstest.mapping.manager.AbstractCmsManager;
+import fr.gwombat.cmstest.core.manager.AbstractCmsManager;
 
 public class JackrabbitManagerImpl extends AbstractCmsManager<AbstractJackrabbitConfigurer> {
 

@@ -4,6 +4,7 @@ import fr.gwombat.cmstest.core.CmsCallBuilder;
 import fr.gwombat.cmstest.core.CmsCallConfig;
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 import fr.gwombat.cmstest.core.context.DynamicContext;
+import fr.gwombat.cmstest.core.manager.CmsManager;
 import fr.gwombat.cmstest.core.path.CmsPath;
 import fr.gwombat.cmstest.custom.jackrabbit.JackrabbitCallConfigWrapper;
 import fr.gwombat.cmstest.custom.jackrabbit.path.JackrabbitPath;
@@ -11,7 +12,6 @@ import fr.gwombat.cmstest.domain.ExtendedPerson;
 import fr.gwombat.cmstest.domain.Gender;
 import fr.gwombat.cmstest.domain.Person;
 import fr.gwombat.cmstest.exceptions.CmsRuntimeException;
-import fr.gwombat.cmstest.mapping.manager.CmsManager;
 import fr.gwombat.cmstest.mapping.service.CmsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -128,7 +129,7 @@ public class CmsManagerTest {
     public void test_simple_object_without_propertyName_should_fail() {
         final Map<String, String> results = new HashMap<>(0);
         results.put("fr/my-site/myId", "1000");
-        given(cmsService.getCmsResults()).willReturn(results);
+        given(cmsService.getCmsResults(any())).willReturn(results);
 
         cmsManager.produceComplexObject(null, Integer.class);
     }
@@ -185,7 +186,7 @@ public class CmsManagerTest {
     @Test
     public void test_complex_object() {
         final Map<String, String> results = initResults();
-        given(cmsService.getCmsResults()).willReturn(results);
+        given(cmsService.getCmsResults(any())).willReturn(results);
 
         final DynamicContext dynamicContext = new DynamicContext();
         dynamicContext.addDynamicNodeName(Person.class, "my-page/person");
@@ -228,7 +229,7 @@ public class CmsManagerTest {
         final Map<String, String> results = initResults();
         results.put("fr/my-site/my-page/person/customProperty", "test");
         results.put("fr/my-site/my-page/person/birthDate", "01/02/1985");
-        given(cmsService.getCmsResults()).willReturn(results);
+        given(cmsService.getCmsResults(any())).willReturn(results);
 
         final DynamicContext dynamicContext = new DynamicContext();
         dynamicContext.addDynamicNodeName(Person.class, "my-page/person");

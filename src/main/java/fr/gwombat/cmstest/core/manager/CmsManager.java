@@ -1,4 +1,4 @@
-package fr.gwombat.cmstest.mapping.manager;
+package fr.gwombat.cmstest.core.manager;
 
 import fr.gwombat.cmstest.core.CmsCallConfigWrapper;
 import fr.gwombat.cmstest.core.context.DynamicContext;

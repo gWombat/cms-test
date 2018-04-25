@@ -1,5 +1,8 @@
 package fr.gwombat.cmstest.mapping.service;
 
+import fr.gwombat.cmstest.core.path.CmsPath;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,7 +13,7 @@ import java.util.Map;
 public class CmsServiceImpl implements CmsService {
 
     @Override
-    public Map<String, String> getCmsResults() {
+    public Map<String, String> getCmsResults(List<CmsPath> calls) {
         return null;
     }
 }

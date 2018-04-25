@@ -2,6 +2,7 @@ package fr.gwombat.cmstest.configuration;
 
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChain;
 import fr.gwombat.cmstest.core.configurers.CallConfigurationChainImpl;
+import fr.gwombat.cmstest.core.manager.CmsManagerDelegate;
 import fr.gwombat.cmstest.mapping.processor.*;
 import fr.gwombat.cmstest.mapping.registry.CallConfigurerRegistryService;
 import fr.gwombat.cmstest.mapping.registry.ConverterRegistryService;
@@ -16,10 +17,16 @@ import org.springframework.context.annotation.Configuration;
 public class CmsInternalConfiguration {
 
     private CmsConfigurer cmsConfigurer;
+    private CmsService    cmsService;
 
     @Autowired
     public void setCmsConfigurer(CmsConfigurer cmsConfigurer) {
         this.cmsConfigurer = cmsConfigurer;
+    }
+
+    @Autowired
+    public void setCmsService(CmsService cmsService) {
+        this.cmsService = cmsService;
     }
 
     @Bean
@@ -75,4 +82,14 @@ public class CmsInternalConfiguration {
         return callConfigurationChain;
     }
 
+    @Bean
+    public CmsManagerDelegate cmsManagerDelegate() {
+        final CmsManagerDelegate cmsManagerDelegate = new CmsManagerDelegate();
+        cmsManagerDelegate.setCallConfigurationChain(callConfigurationChain(callConfigurerRegistryService()));
+        cmsManagerDelegate.setCmsConfigurer(cmsConfigurer);
+        cmsManagerDelegate.setCmsService(cmsService);
+        cmsManagerDelegate.setCmsResultProcessingChain(cmsResultProcessingChain());
+
+        return cmsManagerDelegate;
+    }
 }
