@@ -20,6 +20,8 @@ public class CallConfigurationChainImpl implements CallConfigurationChain {
 
     @Override
     public <T extends CmsCallConfigWrapper> void configure(final T cmsCallConfigWrapper, final List<CmsPath> calls, final ConfigurationContext context) throws CmsConfigurationException {
+        if(cmsCallConfigWrapper == null)
+            return;
 
         for (CmsCallConfigurer configurer : configurers)
             if (configurer.isExecutable(cmsCallConfigWrapper))

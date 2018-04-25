@@ -66,6 +66,12 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
             return null;
 
         try {
+            final ConfigurationContext configurationContext = createConfigurationContext(cmsConfigurer, dynamicContext);
+            final List<CmsPath> calls = new ArrayList<>(0);
+            callConfigurationChain.configure(callConfigWrapper, calls, configurationContext);
+
+            // process calls...
+
             final String nodeName = cmsConfigurer.getRootNodePrefix();
             final ResultProcessingContext context = new ResultProcessingContext();
             context.setPath(nodeName);
@@ -73,7 +79,7 @@ public abstract class AbstractCmsManager<U extends CmsConfigurer> implements Cms
             context.setDynamicContext(dynamicContext);
 
             return (T) cmsResultProcessingChain.process(cmsResults, context);
-        } catch (CmsMappingException e) {
+        } catch (CmsMappingException | CmsConfigurationException e) {
             throw new CmsRuntimeException(e);
         }
     }
